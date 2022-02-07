@@ -11,7 +11,7 @@ require (
 	github.com/spf13/viper v1.10.0
 	github.com/stretchr/testify v1.7.0
 	github.com/tendermint/tendermint v0.34.14
-	github.com/tendermint/tm-db v0.6.4
+	github.com/tendermint/tm-db v0.6.7-0.20211116222540-a25e8a84a035
 )
 
 require (
@@ -79,6 +79,4 @@ require (
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-replace github.com/cosmos/cosmos-sdk => ../cosmos-sdk
-
-replace github.com/tendermint/tm-db => ../tm-db
+replace github.com/tendermint/tm-db => github.com/tendermint/tm-db v0.6.7-0.20211116222540-a25e8a84a035

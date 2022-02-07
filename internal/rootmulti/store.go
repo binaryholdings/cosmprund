@@ -455,23 +455,23 @@ func (rs *Store) PruneStores() {
 	rs.PruneHeights = make([]int64, 0)
 }
 
-func (rs *Store) GetAllVersions() []int {
+// func (rs *Store) GetAllVersions() []int {
 
-	var versions = []int{}
+// 	var versions = []int{}
 
-	for key, store := range rs.stores {
-		if store.GetStoreType() == types.StoreTypeIAVL {
-			// If the store is wrapped with an inter-block cache, we must first unwrap
-			// it to get the underlying IAVL store.
-			store = rs.GetCommitKVStore(key)
-			versions = store.(*iavl.Store).GetAllVersions()
-			// early exit
-			return versions
-		}
-	}
+// 	for key, store := range rs.stores {
+// 		if store.GetStoreType() == types.StoreTypeIAVL {
+// 			// If the store is wrapped with an inter-block cache, we must first unwrap
+// 			// it to get the underlying IAVL store.
+// 			store = rs.GetCommitKVStore(key)
+// 			versions = store.(*iavl.Store).GetAllVersions()
+// 			// early exit
+// 			return versions
+// 		}
+// 	}
 
-	return versions
-}
+// 	return versions
+// }
 
 // CacheWrap implements CacheWrapper/Store/CommitStore.
 func (rs *Store) CacheWrap() types.CacheWrap {

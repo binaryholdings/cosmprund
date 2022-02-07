@@ -1,15 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
 	db "github.com/tendermint/tm-db"
-
-	"github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
 )
 
 // load db
@@ -22,9 +19,9 @@ func pruneCmd() *cobra.Command {
 		Short: "prune data from the application store and block store",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// if err := pruneTMData(args[0]); err != nil {
-			// 	return err
-			// }
+			if err := pruneTMData(args[0]); err != nil {
+				return err
+			}
 
 			if err := pruneAppState(args[0]); err != nil {
 				return err
@@ -46,17 +43,12 @@ func pruneAppState(home string) error {
 		return err
 	}
 
-	appStore := rootmulti.NewStore(appDB)
-
+	// TODO: cleanup app state
+	// appStore := rootmulti.NewStore(appDB)
 	//  get the latest version to prune latest - X versions
 	// latest := rootmulti.GetLatestVersion(appDB)
-
 	// pruneFrom := latest - int64(versions)
-
-	allVersions := appStore.GetAllVersions()
-
-	fmt.Println(allVersions)
-
+	// allVersions := appStore.GetAllVersions()
 	// appStore.PruneStores()
 
 	if err := appDB.ForceCompact(nil, nil); err != nil {
