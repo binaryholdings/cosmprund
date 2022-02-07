@@ -5,29 +5,28 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/cosmos/cosmos-sdk/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
-	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
+	// "github.com/cosmos/cosmos-sdk/types"
+	// sdk "github.com/cosmos/cosmos-sdk/types"
+	// authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	// authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
+	// banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	// capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	// distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	// evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
+	// govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	// minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	// paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	// slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	// stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	// upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	// ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
+	// ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	"github.com/neilotoole/errgroup"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
 	db "github.com/tendermint/tm-db"
-
-	"github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
+	// "github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
 )
 
 // load db
@@ -52,13 +51,14 @@ func pruneCmd() *cobra.Command {
 				return nil
 			})
 
-			// errs.Go(func() error {
-			err = pruneAppState(args[0])
-			if err != nil {
-				return err
+			if cosmosSdk {
+				err = pruneAppState(args[0])
+				if err != nil {
+					return err
+				}
+				return nil
+
 			}
-			// return nil
-			// })
 
 			return errs.Wait()
 		},
@@ -75,50 +75,52 @@ func pruneAppState(home string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("pruning application state")
 
-	// only mount keys from core sdk
-	// todo allow for other keys to be mounted
-	keys := types.NewKVStoreKeys(
-		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
-		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
-		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-	)
+	//TODO: need to get all versions in the store, setting randomly is too slow
+	// fmt.Println("pruning application state")
 
-	if app == "osmosis" {
-		osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
-			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
-			"bech32ibc")
-		for key, value := range osmoKeys {
-			keys[key] = value
-		}
-	}
+	// // only mount keys from core sdk
+	// // todo allow for other keys to be mounted
+	// keys := types.NewKVStoreKeys(
+	// 	authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
+	// 	minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
+	// 	govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
+	// 	evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
+	// )
 
-	// TODO: cleanup app state
-	appStore := rootmulti.NewStore(appDB)
+	// if app == "osmosis" {
+	// 	osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
+	// 		"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
+	// 		"bech32ibc")
+	// 	for key, value := range osmoKeys {
+	// 		keys[key] = value
+	// 	}
+	// }
 
-	for _, value := range keys {
-		appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
-	}
+	// // TODO: cleanup app state
+	// appStore := rootmulti.NewStore(appDB)
 
-	err = appStore.LoadLatestVersion()
-	if err != nil {
-		return err
-	}
+	// for _, value := range keys {
+	// 	appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
+	// }
 
-	//  get the latest version to prune latest - X versions
-	latest := rootmulti.GetLatestVersion(appDB)
-	// allVersions := appStore.GetAllVersions()
-	pruneFrom := latest - int64(versions)
+	// err = appStore.LoadLatestVersion()
+	// if err != nil {
+	// 	return err
+	// }
 
-	allVersions := []int64{}
-	for i := int64(3000000); i < pruneFrom; i++ {
-		allVersions = append(allVersions, i)
-	}
-	appStore.PruneHeights = allVersions
+	// //  get the latest version to prune latest - X versions
+	// latest := rootmulti.GetLatestVersion(appDB)
+	// // allVersions := appStore.GetAllVersions()
+	// pruneFrom := latest - int64(versions)
 
-	appStore.PruneStores()
+	// allVersions := []int64{}
+	// for i := int64(3000000); i < pruneFrom; i++ {
+	// 	allVersions = append(allVersions, i)
+	// }
+	// appStore.PruneHeights = allVersions
+
+	// appStore.PruneStores()
 
 	fmt.Println("compacting application state")
 	if err := appDB.(*db.GoLevelDB).ForceCompact(nil, nil); err != nil {
