@@ -455,22 +455,25 @@ func (rs *Store) PruneStores() {
 	rs.PruneHeights = make([]int64, 0)
 }
 
-// func (rs *Store) GetAllVersions() []int {
+// func (rs *Store) GetAllVersions() []int64 {
 
-// 	var versions = []int{}
+// 	versions := make([]int64, 0)
 
 // 	for key, store := range rs.stores {
 // 		if store.GetStoreType() == types.StoreTypeIAVL {
 // 			// If the store is wrapped with an inter-block cache, we must first unwrap
 // 			// it to get the underlying IAVL store.
 // 			store = rs.GetCommitKVStore(key)
-// 			versions = store.(*iavl.Store).GetAllVersions()
-// 			// early exit
-// 			return versions
+// 			versionsstore.(*iavl.Store).GetAllVersions()
+// 			if err := store.(*iavl.Store).DeleteVersions(rs.PruneHeights...); err != nil {
+// 				if errCause := errors.Cause(err); errCause != nil && errCause != iavltree.ErrVersionDoesNotExist {
+// 					panic(err)
+// 				}
+// 			}
 // 		}
 // 	}
 
-// 	return versions
+// 	rs.PruneHeights = make([]int64, 0)
 // }
 
 // CacheWrap implements CacheWrapper/Store/CommitStore.
