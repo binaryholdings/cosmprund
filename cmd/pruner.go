@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -40,16 +41,16 @@ func pruneCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			// ctx := cmd.Context()
-			// errs, _ := errgroup.WithContext(ctx)
+			ctx := cmd.Context()
+			errs, _ := errgroup.WithContext(ctx)
 			var err error
 
-			// errs.Go(func() error {
-			// 	if err = pruneTMData(args[0]); err != nil {
-			// 		return err
-			// 	}
-			// 	return nil
-			// })
+			errs.Go(func() error {
+				if err = pruneTMData(args[0]); err != nil {
+					return err
+				}
+				return nil
+			})
 
 			// errs.Go(func() error {
 			err = pruneAppState(args[0])
@@ -59,7 +60,7 @@ func pruneCmd() *cobra.Command {
 			// return nil
 			// })
 
-			return nil
+			return errs.Wait()
 		},
 	}
 	return cmd
@@ -85,11 +86,20 @@ func pruneAppState(home string) error {
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 	)
 
+	if app == "osmosis" {
+		osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
+			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
+			"bech32ibc")
+		for key, value := range osmoKeys {
+			keys[key] = value
+		}
+	}
+
 	// TODO: cleanup app state
 	appStore := rootmulti.NewStore(appDB)
 
 	for _, value := range keys {
-		appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, appDB)
+		appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
 	}
 
 	err = appStore.LoadLatestVersion()
