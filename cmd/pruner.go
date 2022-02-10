@@ -5,28 +5,30 @@ import (
 	"fmt"
 	"path/filepath"
 
-	// "github.com/cosmos/cosmos-sdk/types"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-	// authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	// authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	// banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	// capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	// distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	// evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
-	// govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	// minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	// paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	// slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
-	// stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	// upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	// ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
-	// ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
+	"github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
+	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	"github.com/neilotoole/errgroup"
 	"github.com/spf13/cobra"
+	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
 	db "github.com/tendermint/tm-db"
-	// "github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
+
+	"github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
 )
 
 // load db
@@ -43,13 +45,14 @@ func pruneCmd() *cobra.Command {
 			ctx := cmd.Context()
 			errs, _ := errgroup.WithContext(ctx)
 			var err error
-
-			errs.Go(func() error {
-				if err = pruneTMData(args[0]); err != nil {
-					return err
-				}
-				return nil
-			})
+			if tendermint {
+				errs.Go(func() error {
+					if err = pruneTMData(args[0]); err != nil {
+						return err
+					}
+					return nil
+				})
+			}
 
 			if cosmosSdk {
 				err = pruneAppState(args[0])
@@ -67,63 +70,70 @@ func pruneCmd() *cobra.Command {
 }
 
 func pruneAppState(home string) error {
-	dbType := db.BackendType(backend)
+
+	// this has the potential to expand size, should just use state sync
+	// dbType := db.BackendType(backend)
 
 	dbDir := rootify(dataDir, home)
+
+	o := opt.Options{
+		DisableSeeksCompaction: true,
+	}
+
 	// Get BlockStore
-	appDB, err := db.NewDB("application", dbType, dbDir)
+	appDB, err := db.NewGoLevelDBWithOpts("application", dbDir, &o)
 	if err != nil {
 		return err
 	}
 
 	//TODO: need to get all versions in the store, setting randomly is too slow
-	// fmt.Println("pruning application state")
+	fmt.Println("pruning application state")
 
-	// // only mount keys from core sdk
-	// // todo allow for other keys to be mounted
-	// keys := types.NewKVStoreKeys(
-	// 	authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
-	// 	minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
-	// 	govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
-	// 	evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-	// )
+	// only mount keys from core sdk
+	// todo allow for other keys to be mounted
+	keys := types.NewKVStoreKeys(
+		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
+		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
+		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
+	)
 
-	// if app == "osmosis" {
-	// 	osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
-	// 		"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
-	// 		"bech32ibc")
-	// 	for key, value := range osmoKeys {
-	// 		keys[key] = value
-	// 	}
-	// }
+	if app == "osmosis" {
+		osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
+			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
+			"bech32ibc")
+		for key, value := range osmoKeys {
+			keys[key] = value
+		}
+	}
 
-	// // TODO: cleanup app state
-	// appStore := rootmulti.NewStore(appDB)
+	// TODO: cleanup app state
+	appStore := rootmulti.NewStore(appDB)
 
-	// for _, value := range keys {
-	// 	appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
-	// }
+	for _, value := range keys {
+		appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
+	}
 
-	// err = appStore.LoadLatestVersion()
-	// if err != nil {
-	// 	return err
-	// }
+	err = appStore.LoadLatestVersion()
+	if err != nil {
+		return err
+	}
 
-	// //  get the latest version to prune latest - X versions
-	// latest := rootmulti.GetLatestVersion(appDB)
-	// // allVersions := appStore.GetAllVersions()
-	// pruneFrom := latest - int64(versions)
+	versions := appStore.GetAllVersions()
 
-	// allVersions := []int64{}
-	// for i := int64(3000000); i < pruneFrom; i++ {
-	// 	allVersions = append(allVersions, i)
-	// }
-	// appStore.PruneHeights = allVersions
+	v64 := make([]int64, len(versions))
+	for i := 0; i < len(versions); i++ {
+		v64[i] = int64(versions[i])
+	}
 
-	// appStore.PruneStores()
+	fmt.Println(len(v64))
+
+	appStore.PruneHeights = v64[:len(v64)-10]
+
+	appStore.PruneStores()
 
 	fmt.Println("compacting application state")
-	if err := appDB.(*db.GoLevelDB).ForceCompact(nil, nil); err != nil {
+	if err := appDB.ForceCompact(nil, nil); err != nil {
 		return err
 	}
 
@@ -133,19 +143,22 @@ func pruneAppState(home string) error {
 
 // pruneTMData prunes the tendermint blocks and state based on the amount of blocks to keep
 func pruneTMData(home string) error {
-	dbType := db.BackendType(backend)
 
 	dbDir := rootify(dataDir, home)
 
+	o := opt.Options{
+		DisableSeeksCompaction: true,
+	}
+
 	// Get BlockStore
-	blockStoreDB, err := db.NewDB("blockstore", dbType, dbDir)
+	blockStoreDB, err := db.NewGoLevelDBWithOpts("blockstore", dbDir, &o)
 	if err != nil {
 		return err
 	}
 	blockStore := tmstore.NewBlockStore(blockStoreDB)
 
 	// Get StateStore
-	stateDB, err := db.NewDB("state", dbType, dbDir)
+	stateDB, err := db.NewGoLevelDBWithOpts("state", dbDir, &o)
 	if err != nil {
 		return err
 	}
@@ -166,7 +179,7 @@ func pruneTMData(home string) error {
 		}
 
 		fmt.Println("compacting block store")
-		if err := blockStoreDB.(*db.GoLevelDB).ForceCompact(nil, nil); err != nil {
+		if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
 			return err
 		}
 
@@ -181,7 +194,7 @@ func pruneTMData(home string) error {
 	}
 
 	fmt.Println("compacting state store")
-	if err := stateDB.(*db.GoLevelDB).ForceCompact(nil, nil); err != nil {
+	if err := stateDB.ForceCompact(nil, nil); err != nil {
 		return err
 	}
 
