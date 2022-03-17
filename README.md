@@ -19,7 +19,7 @@ Cosmprund works of a data directory that has the same structure of a normal cosm
 
 ```
 make bulid
-./build/cosmprund <path_to_data_dir> // default behavior
+./build/cosmprund prune <path_to_data_dir> // default behavior
 ```
 
 Flags: 
