@@ -48,12 +48,6 @@ func NewRootCmd() *cobra.Command {
 		panic(err)
 	}
 
-	// --data-dir flag
-	rootCmd.PersistentFlags().StringVarP(&dataDir, "data-dir", "d", "data", "set the path to the data directory if moved (default=data)")
-	if err := viper.BindPFlag("data-dir", rootCmd.PersistentFlags().Lookup("data-dir")); err != nil {
-		panic(err)
-	}
-
 	// --backend flag
 	rootCmd.PersistentFlags().StringVar(&backend, "backend", "goleveldb", "set the type of db being used(default=goleveldb)") //todo add list of dbs to comment
 	if err := viper.BindPFlag("backend", rootCmd.PersistentFlags().Lookup("backend")); err != nil {
@@ -67,7 +61,7 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	// --cosmos-sdk flag
-	rootCmd.PersistentFlags().BoolVar(&cosmosSdk, "cosmos-sdk", true, "set tto false if using only with tendermint (default true)")
+	rootCmd.PersistentFlags().BoolVar(&cosmosSdk, "cosmos-sdk", true, "set t`o false if using only with tendermint (default true)")
 	if err := viper.BindPFlag("cosmos-sdk", rootCmd.PersistentFlags().Lookup("cosmos-sdk")); err != nil {
 		panic(err)
 	}
