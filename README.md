@@ -18,8 +18,16 @@ Cosmprund works of a data directory that has the same structure of a normal cosm
 
 
 ```
-make bulid
-./build/cosmprund prune <path_to_data_dir> // default behavior
+# clone & build cosmprund repo
+git clone https://github.com/binaryholdings/cosmprund
+cd cosmprund
+make build
+
+# stop daemon/cosmovisor
+sudo systemctl stop cosmovisor
+
+# run cosmprund 
+./build/cosmprund prune ~/.gaiad/data --cosmos-sdk=false
 ```
 
 Flags: 
