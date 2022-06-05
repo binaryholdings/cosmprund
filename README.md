@@ -38,3 +38,11 @@ Flags:
 - `app`: the application you want to prune, currently only osmosis, outside the sdk default modules
 - `cosmos-sdk`: If pruning a non cosmos-sdk chain, like Nomic, you only want to use tendermint pruning or if you want to only prune tendermint block & state as this is generally large on machines(Default true)
 - `tendermint`: If the user wants to only prune application data they can disable pruning of tendermint data. (Default true)
+
+
+### Note
+To use this with RocksDB you must:
+
+```bash
+go install -ldflags '-w -s -X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb' -tags rocksdb ./...
+```
