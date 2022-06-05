@@ -26,6 +26,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
+	tmtypes "github.com/tendermint/tendermint/types"
 	db "github.com/tendermint/tm-db"
 
 	"github.com/binaryholdings/cosmos-pruner/internal/rootmulti"
@@ -46,12 +47,13 @@ func pruneCmd() *cobra.Command {
 			errs, _ := errgroup.WithContext(ctx)
 			var err error
 			if tendermint {
-				errs.Go(func() error {
-					if err = pruneTMData(args[0]); err != nil {
-						return err
-					}
-					return nil
-				})
+				// errs.Go(func() error {
+				// 	if err = pruneTMData(args[0]); err != nil {
+				// 		return err
+				// 	}
+				// 	return nil
+				// })
+				copyTMData(args[0])
 			}
 
 			if cosmosSdk {
@@ -197,6 +199,93 @@ func pruneTMData(home string) error {
 	if err := stateDB.ForceCompact(nil, nil); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// pruneTMData prunes the tendermint blocks and state based on the amount of blocks to keep
+func copyTMData(home string) error {
+
+	dbDir := rootify(dataDir, home)
+
+	o := opt.Options{
+		DisableSeeksCompaction: true,
+	}
+
+	// Get BlockStore
+	blockStoreDB, err := db.NewGoLevelDBWithOpts("blockstore", dbDir, &o)
+	if err != nil {
+		return err
+	}
+	blockStore := tmstore.NewBlockStore(blockStoreDB)
+
+	// Get StateStore
+	stateDB, err := db.NewGoLevelDBWithOpts("state", dbDir, &o)
+	if err != nil {
+		return err
+	}
+
+	stateStore := state.NewStore(stateDB)
+
+	latestState, err := stateStore.Load()
+	if err != nil {
+		return err
+	}
+	SeenCommit := blockStore.LoadSeenCommit(latestState.LastBlockHeight)
+	latestBlock := blockStore.LoadBlock(latestState.LastBlockHeight)
+
+	blockStoreDB.Close()
+	stateDB.Close()
+
+	//create a new db to copy over the latest state
+
+	// Get BlockStore
+	newBlockStoreDB, err := db.NewGoLevelDBWithOpts("new_blockstore", dbDir, &o)
+	if err != nil {
+		return err
+	}
+	newBlockStore := tmstore.NewBlockStore(newBlockStoreDB)
+
+	// Get StateStore
+	newStateDB, err := db.NewGoLevelDBWithOpts("new_state", dbDir, &o)
+	if err != nil {
+		return err
+	}
+
+	newStateStore := state.NewStore(newStateDB)
+
+	newStateStore.Bootstrap(latestState)
+	// newBlockStore.SaveSeenCommit(latestState.LastBlockHeight, SeenCommit)
+
+	parts := latestBlock.MakePartSet(tmtypes.BlockPartSizeBytes)
+	newBlockStore.SaveBlock(latestBlock, parts, SeenCommit)
+
+	newBlockStoreDB.Close()
+	newStateDB.Close()
+
+	// var (
+	// 	oldBlocks = dbDir + "/blockstore.db"
+	// 	oldState  = dbDir + "/state.db"
+	// 	newBlocks = dbDir + "/new_blockstore.db"
+	// 	newState  = dbDir + "/new_state.db"
+	// )
+
+	// err = os.RemoveAll(oldBlocks)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// err = os.RemoveAll(oldState)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// err = os.Rename(newBlocks, oldBlocks)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// err = os.Rename(newState, oldState)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	return nil
 }
