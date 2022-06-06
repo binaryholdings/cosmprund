@@ -23,7 +23,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	"github.com/neilotoole/errgroup"
 	"github.com/spf13/cobra"
-	"github.com/syndtr/goleveldb/leveldb/opt"
+//	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
 	db "github.com/tendermint/tm-db"
@@ -76,12 +76,12 @@ func pruneAppState(home string) error {
 
 	dbDir := rootify(dataDir, home)
 
-	o := opt.Options{
-		DisableSeeksCompaction: true,
-	}
+	//o := opt.Options{
+	//	DisableSeeksCompaction: true,
+	//}
 
 	// Get BlockStore
-	appDB, err := db.NewGoLevelDBWithOpts("application", dbDir, &o)
+	appDB, err := db.NewRocksDB("application", dbDir)
 	if err != nil {
 		return err
 	}
@@ -132,10 +132,10 @@ func pruneAppState(home string) error {
 
 	appStore.PruneStores()
 
-	fmt.Println("compacting application state")
-	if err := appDB.ForceCompact(nil, nil); err != nil {
-		return err
-	}
+//	fmt.Println("compacting application state")
+//	if err := appDB.ForceCompact(nil, nil); err != nil {
+//		return err
+//	}
 
 	//create a new app store
 	return nil
@@ -146,19 +146,19 @@ func pruneTMData(home string) error {
 
 	dbDir := rootify(dataDir, home)
 
-	o := opt.Options{
-		DisableSeeksCompaction: true,
-	}
+	//o := opt.Options{
+	//	DisableSeeksCompaction: true,
+	//}
 
 	// Get BlockStore
-	blockStoreDB, err := db.NewGoLevelDBWithOpts("blockstore", dbDir, &o)
+	blockStoreDB, err := db.NewRocksDB("blockstore", dbDir)
 	if err != nil {
 		return err
 	}
 	blockStore := tmstore.NewBlockStore(blockStoreDB)
 
 	// Get StateStore
-	stateDB, err := db.NewGoLevelDBWithOpts("state", dbDir, &o)
+	stateDB, err := db.NewRocksDB("state", dbDir)
 	if err != nil {
 		return err
 	}
@@ -178,10 +178,10 @@ func pruneTMData(home string) error {
 			return err
 		}
 
-		fmt.Println("compacting block store")
-		if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
-			return err
-		}
+//		fmt.Println("compacting block store")
+//		if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
+//			return err
+//		}
 
 		return nil
 	})
@@ -193,10 +193,10 @@ func pruneTMData(home string) error {
 		return err
 	}
 
-	fmt.Println("compacting state store")
-	if err := stateDB.ForceCompact(nil, nil); err != nil {
-		return err
-	}
+//	fmt.Println("compacting state store")
+//	if err := stateDB.ForceCompact(nil, nil); err != nil {
+//		return err
+//	}
 
 	return nil
 }
