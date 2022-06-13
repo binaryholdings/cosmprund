@@ -234,7 +234,7 @@ func copyTMData(home string) error {
 	SeenCommit := blockStore.LoadSeenCommit(latestState.LastBlockHeight)
 	latestBlock := blockStore.LoadBlock(latestState.LastBlockHeight)
 
-	blockStoreDB.Close()
+	// blockStoreDB.Close()
 	stateDB.Close()
 
 	//create a new db to copy over the latest state
@@ -255,7 +255,8 @@ func copyTMData(home string) error {
 	newStateStore := state.NewStore(newStateDB)
 
 	newStateStore.Bootstrap(latestState)
-	// newBlockStore.SaveSeenCommit(latestState.LastBlockHeight, SeenCommit)
+
+	newBlockStore.SaveSeenCommit(latestState.LastBlockHeight, SeenCommit)
 
 	parts := latestBlock.MakePartSet(tmtypes.BlockPartSizeBytes)
 	newBlockStore.SaveBlock(latestBlock, parts, SeenCommit)
