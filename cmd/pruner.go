@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	"path/filepath"
 
 	"github.com/cosmos/cosmos-sdk/types"
@@ -103,6 +104,16 @@ func pruneAppState(home string) error {
 			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
 			"bech32ibc")
 		for key, value := range osmoKeys {
+			keys[key] = value
+		}
+	} else if app == "cosmoshub" {
+		cosmoshubKeys := sdk.NewKVStoreKeys(
+			"liquidity", /* liquiditytypes.StoreKey, */
+			feegrant.StoreKey,
+			authzkeeper.StoreKey,
+			"packetfowardmiddleware", /* routertypes.StoreKey, */
+			"interchainaccounts" /* icahosttypes.StoreKey */)
+		for key, value := range cosmoshubKeys {
 			keys[key] = value
 		}
 	}
