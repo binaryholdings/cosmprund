@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	"path/filepath"
 
 	"github.com/cosmos/cosmos-sdk/types"
@@ -107,12 +106,18 @@ func pruneAppState(home string) error {
 			keys[key] = value
 		}
 	} else if app == "cosmoshub" {
-		cosmoshubKeys := sdk.NewKVStoreKeys(
-			"liquidity", /* liquiditytypes.StoreKey, */
-			feegrant.StoreKey,
-			authzkeeper.StoreKey,
+		/*
+			keys := sdk.NewKVStoreKeys(
+				liquiditytypes.StoreKey,
+				feegrant.StoreKey, authzkeeper.StoreKey, routertypes.StoreKey, icahosttypes.StoreKey,
+			)
+		*/
+		cosmoshubKeys := types.NewKVStoreKeys(
+			"liquidity",
+			"feegrant",
+			"authz",
 			"packetfowardmiddleware", /* routertypes.StoreKey, */
-			"interchainaccounts" /* icahosttypes.StoreKey */)
+			"icahost" /* icahosttypes.StoreKey */)
 		for key, value := range cosmoshubKeys {
 			keys[key] = value
 		}
