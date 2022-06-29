@@ -158,6 +158,8 @@ func pruneAppState(home string) error {
 		for key, value := range kavaKeys {
 			keys[key] = value
 		}
+
+		delete(keys, "minttypes.StoreKey")
 	}
 
 	// TODO: cleanup app state
