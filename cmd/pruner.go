@@ -146,7 +146,7 @@ func pruneAppState(home string) error {
 			"issuance",  //issuancetypes.StoreKey,
 			"bep3",      //bep3types.StoreKey,
 			//"pricefeed", //pricefeedtypes.StoreKey,
-			"swap",      //swaptypes.StoreKey,
+			//"swap",      //swaptypes.StoreKey,
 			"cdp",       //cdptypes.StoreKey,
 			"hard",      //hardtypes.StoreKey,
 			"committee", //committeetypes.StoreKey,
