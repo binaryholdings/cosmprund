@@ -139,7 +139,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "kava" {
 		kavaKeys := types.NewKVStoreKeys(
-			"evm",       // evmtypes.StoreKey,
 			"feemarket", //feemarkettypes.StoreKey,
 			"authz",     //authzkeeper.StoreKey,
 			"kavadist",  //kavadisttypes.StoreKey,
