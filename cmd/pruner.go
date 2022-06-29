@@ -126,11 +126,6 @@ func pruneAppState(home string) error {
 			keys[key] = value
 		}
 	} else if app == "terra" { // terra classic
-		/*
-			oracletypes.StoreKey, markettypes.StoreKey, treasurytypes.StoreKey,
-			wasmtypes.StoreKey, authzkeeper.StoreKey, feegrant.StoreKey,
-		*/
-
 		terraKeys := types.NewKVStoreKeys(
 			"oracle",   // oracletypes.StoreKey,
 			"market",   // markettypes.StoreKey,
@@ -140,6 +135,28 @@ func pruneAppState(home string) error {
 			"feegrant", // feegrant.StoreKey
 		)
 		for key, value := range terraKeys {
+			keys[key] = value
+		}
+	} else if app == "kava" {
+		kavaKeys := types.NewKVStoreKeys(
+			"evm",       // evmtypes.StoreKey,
+			"feemarket", //feemarkettypes.StoreKey,
+			"authz",     //authzkeeper.StoreKey,
+			"kavadist",  //kavadisttypes.StoreKey,
+			"auction",   //auctiontypes.StoreKey,
+			"issuance",  //issuancetypes.StoreKey,
+			"bep3",      //bep3types.StoreKey,
+			"pricefeed", //pricefeedtypes.StoreKey,
+			"swap",      //swaptypes.StoreKey,
+			"cdp",       //cdptypes.StoreKey,
+			"hard",      //hardtypes.StoreKey,
+			"committee", //committeetypes.StoreKey,
+			"incentive", //incentivetypes.StoreKey,
+			"evmutil",   //evmutiltypes.StoreKey,
+			"savings",   //savingstypes.StoreKey,
+			"bridge",    //bridgetypes.StoreKey,
+		)
+		for key, value := range kavaKeys {
 			keys[key] = value
 		}
 	}
