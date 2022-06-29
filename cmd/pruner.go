@@ -125,6 +125,23 @@ func pruneAppState(home string) error {
 		for key, value := range cosmoshubKeys {
 			keys[key] = value
 		}
+	} else if app == "terra" { // terra classic
+		/*
+			oracletypes.StoreKey, markettypes.StoreKey, treasurytypes.StoreKey,
+			wasmtypes.StoreKey, authzkeeper.StoreKey, feegrant.StoreKey,
+		*/
+
+		terraKeys := types.NewKVStoreKeys(
+			"oracle",   // oracletypes.StoreKey,
+			"market",   // markettypes.StoreKey,
+			"treasury", //treasurytypes.StoreKey,
+			"wasm",     // wasmtypes.StoreKey,
+			"authz",    //authzkeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey
+		)
+		for key, value := range terraKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
