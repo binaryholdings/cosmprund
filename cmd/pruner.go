@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -99,19 +98,24 @@ func pruneAppState(home string) error {
 	)
 
 	if app == "osmosis" {
-		osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
-			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
-			"bech32ibc")
+		osmoKeys := types.NewKVStoreKeys(
+			"icahost",        //icahosttypes.StoreKey,
+			"gamm",           // gammtypes.StoreKey,
+			"lockup",         //lockuptypes.StoreKey,
+			"incentives",     // incentivestypes.StoreKey,
+			"epochs",         // epochstypes.StoreKey,
+			"poolincentives", //poolincentivestypes.StoreKey,
+			"authz",          //authzkeeper.StoreKey,
+			"txfees",         // txfeestypes.StoreKey,
+			"superfluid",     // superfluidtypes.StoreKey,
+			"bech32ibc",      // bech32ibctypes.StoreKey,
+			"wasm",           // wasm.StoreKey,
+			"tokenfactory",   //tokenfactorytypes.StoreKey,
+		)
 		for key, value := range osmoKeys {
 			keys[key] = value
 		}
 	} else if app == "cosmoshub" {
-		/*
-			keys := sdk.NewKVStoreKeys(
-				liquiditytypes.StoreKey,
-				feegrant.StoreKey, authzkeeper.StoreKey, routertypes.StoreKey, icahosttypes.StoreKey,
-			)
-		*/
 		cosmoshubKeys := types.NewKVStoreKeys(
 			"liquidity",
 			"feegrant",
