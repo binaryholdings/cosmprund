@@ -185,6 +185,19 @@ func pruneAppState(home string) error {
 		for key, value := range gravitybridgeKeys {
 			keys[key] = value
 		}
+	} else if app == "sifchain" {
+		gravitybridgeKeys := types.NewKVStoreKeys(
+			"feegrant",      // feegrant.StoreKey,
+			"dispensation",  // disptypes.StoreKey,
+			"ethbridge",     // ethbridgetypes.StoreKey,
+			"clp",           // clptypes.StoreKey,
+			"oracle",        // oracletypes.StoreKey,
+			"tokenregistry", // tokenregistrytypes.StoreKey,
+			"admin",         // admintypes.StoreKey,
+		)
+		for key, value := range gravitybridgeKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
