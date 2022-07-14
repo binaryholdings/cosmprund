@@ -176,6 +176,15 @@ func pruneAppState(home string) error {
 		for key, value := range evmosKeys {
 			keys[key] = value
 		}
+	} else if app == "gravitybridge" {
+		gravitybridgeKeys := types.NewKVStoreKeys(
+			"authz",     // authzkeeper.StoreKey,
+			"gravity",   //  gravitytypes.StoreKey,
+			"bech32ibc", // bech32ibctypes.StoreKey,
+		)
+		for key, value := range gravitybridgeKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
