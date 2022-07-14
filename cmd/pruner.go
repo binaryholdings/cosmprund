@@ -186,7 +186,7 @@ func pruneAppState(home string) error {
 			keys[key] = value
 		}
 	} else if app == "sifchain" {
-		gravitybridgeKeys := types.NewKVStoreKeys(
+		sifchainKeys := types.NewKVStoreKeys(
 			"feegrant",      // feegrant.StoreKey,
 			"dispensation",  // disptypes.StoreKey,
 			"ethbridge",     // ethbridgetypes.StoreKey,
@@ -195,7 +195,16 @@ func pruneAppState(home string) error {
 			"tokenregistry", // tokenregistrytypes.StoreKey,
 			"admin",         // admintypes.StoreKey,
 		)
-		for key, value := range gravitybridgeKeys {
+		for key, value := range sifchainKeys {
+			keys[key] = value
+		}
+	} else if app == "starname" {
+		starnameKeys := types.NewKVStoreKeys(
+			"wasm",          // wasm.StoreKey,
+			"configuration", // configuration.StoreKey,
+			"starname",      // starname.DomainStoreKey,
+		)
+		for key, value := range starnameKeys {
 			keys[key] = value
 		}
 	}
