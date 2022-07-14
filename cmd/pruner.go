@@ -160,6 +160,22 @@ func pruneAppState(home string) error {
 		}
 
 		delete(keys, "minttypes.StoreKey")
+	} else if app == "evmos" {
+		evmosKeys := types.NewKVStoreKeys(
+			"feegrant",   // feegrant.StoreKey,
+			"authz",      // authzkeeper.StoreKey,
+			"evm",        // evmtypes.StoreKey,
+			"feemarket",  // feemarkettypes.StoreKey,
+			"inflation",  // inflationtypes.StoreKey,
+			"erc20",      // erc20types.StoreKey,
+			"incentives", // incentivestypes.StoreKey,
+			"epochs",     // epochstypes.StoreKey,
+			"claims",     // claimstypes.StoreKey,
+			"vesting",    // vestingtypes.StoreKey,
+		)
+		for key, value := range evmosKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
