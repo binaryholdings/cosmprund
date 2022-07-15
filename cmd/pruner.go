@@ -363,6 +363,15 @@ func pruneAppState(home string) error {
 		for key, value := range bitcannaKeys {
 			keys[key] = value
 		}
+	} else if app == "konstellation" {
+		konstellationKeys := types.NewKVStoreKeys(
+			"oracle", // racletypes.StoreKey,
+			"wasm",   // wasm.StoreKey,
+		)
+
+		for key, value := range konstellationKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
