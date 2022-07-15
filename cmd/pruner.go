@@ -215,6 +215,20 @@ func pruneAppState(home string) error {
 		for key, value := range regenKeys {
 			keys[key] = value
 		}
+	} else if app == "akash" {
+		akashKeys := types.NewKVStoreKeys(
+			"authz",      // authzkeeper.StoreKey,
+			"escrow",     // escrow.StoreKey,
+			"deployment", // deployment.StoreKey,
+			"market",     // market.StoreKey,
+			"provider",   // provider.StoreKey,
+			"audit",      // audit.StoreKey,
+			"cert",       // cert.StoreKey,
+			"inflation",  // inflation.StoreKey,
+		)
+		for key, value := range akashKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
