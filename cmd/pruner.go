@@ -313,6 +313,16 @@ func pruneAppState(home string) error {
 		for key, value := range cyberKeys {
 			keys[key] = value
 		}
+	} else if app == "cheqd" {
+		cheqdKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"cheqd",    // cheqdtypes.StoreKey,
+		)
+
+		for key, value := range cheqdKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
