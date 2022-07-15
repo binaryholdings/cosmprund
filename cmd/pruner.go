@@ -335,6 +335,16 @@ func pruneAppState(home string) error {
 		for key, value := range stargazeKeys {
 			keys[key] = value
 		}
+	} else if app == "bandchain" {
+		bandchainKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"oracle",   // oracletypes.StoreKey,
+		)
+
+		for key, value := range bandchainKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
