@@ -159,7 +159,7 @@ func pruneAppState(home string) error {
 			keys[key] = value
 		}
 
-		delete(keys, "minttypes.StoreKey")
+		delete(keys, "mint") // minttypes.StoreKey
 	} else if app == "evmos" {
 		evmosKeys := types.NewKVStoreKeys(
 			"feegrant",   // feegrant.StoreKey,
@@ -239,6 +239,20 @@ func pruneAppState(home string) error {
 			"vpn",          // vpntypes.StoreKey,
 		)
 		for key, value := range sentinelKeys {
+			keys[key] = value
+		}
+	} else if app == "emoney" {
+		emoneyKeys := types.NewKVStoreKeys(
+			"liquidityprovider", // lptypes.StoreKey,
+			"issuer",            // issuer.StoreKey,
+			"authority",         // authority.StoreKey,
+			"market",            // market.StoreKey,
+			//"market_indices",    // market.StoreKeyIdx,
+			"buyback",   // buyback.StoreKey,
+			"inflation", // inflation.StoreKey,
+		)
+
+		for key, value := range emoneyKeys {
 			keys[key] = value
 		}
 	}

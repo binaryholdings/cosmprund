@@ -452,7 +452,10 @@ func (rs *Store) PruneStores() {
 				fmt.Println("pruning store:", k.Name())
 				if err := store.(*iavl.Store).DeleteVersions(rs.PruneHeights...); err != nil {
 					if errCause := errors.Cause(err); errCause != nil && errCause != iavltree.ErrVersionDoesNotExist {
-						panic(err)
+						fmt.Println("error pruning store:", k.Name())
+						if !strings.HasPrefix(err.Error(), "cannot delete latest saved version") {
+							panic(err)
+						}
 					}
 				}
 				fmt.Println("finished pruning store:", k.Name())
