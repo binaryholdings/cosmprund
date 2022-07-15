@@ -255,6 +255,17 @@ func pruneAppState(home string) error {
 		for key, value := range emoneyKeys {
 			keys[key] = value
 		}
+	} else if app == "ixo" {
+		ixoKeys := types.NewKVStoreKeys(
+			"did",      // didtypes.StoreKey,
+			"bonds",    // bondstypes.StoreKey,
+			"payments", // paymentstypes.StoreKey,
+			"project",  // projecttypes.StoreKey,
+		)
+
+		for key, value := range ixoKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
