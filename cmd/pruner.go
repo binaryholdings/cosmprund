@@ -354,6 +354,15 @@ func pruneAppState(home string) error {
 		for key, value := range chihuahuaKeys {
 			keys[key] = value
 		}
+	} else if app == "bitcanna" {
+		bitcannaKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"bcna",     // bcnamoduletypes.StoreKey,
+		)
+
+		for key, value := range bitcannaKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
