@@ -247,9 +247,9 @@ func pruneAppState(home string) error {
 			"issuer",            // issuer.StoreKey,
 			"authority",         // authority.StoreKey,
 			"market",            // market.StoreKey,
-			"market_indices",    // market.StoreKeyIdx,
-			"buyback",           // buyback.StoreKey,
-			"inflation",         // inflation.StoreKey,
+			//"market_indices",    // market.StoreKeyIdx,
+			"buyback",   // buyback.StoreKey,
+			"inflation", // inflation.StoreKey,
 		)
 
 		for key, value := range emoneyKeys {
