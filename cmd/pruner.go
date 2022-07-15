@@ -297,6 +297,22 @@ func pruneAppState(home string) error {
 		for key, value := range kichainKeys {
 			keys[key] = value
 		}
+	} else if app == "cyber" {
+		cyberKeys := types.NewKVStoreKeys(
+			"liquidity", // liquiditytypes.StoreKey,
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"bandwidth", // bandwidthtypes.StoreKey,
+			"graph",     // graphtypes.StoreKey,
+			"rank",      // ranktypes.StoreKey,
+			"grid",      // gridtypes.StoreKey,
+			"dmn",       // dmntypes.StoreKey,
+			"wasm",      // wasm.StoreKey,
+		)
+
+		for key, value := range cyberKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
