@@ -266,6 +266,17 @@ func pruneAppState(home string) error {
 		for key, value := range ixoKeys {
 			keys[key] = value
 		}
+	} else if app == "juno" {
+		junoKeys := types.NewKVStoreKeys(
+			"authz",    // authzkeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+			"icahost",  // icahosttypes.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range junoKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
