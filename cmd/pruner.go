@@ -372,6 +372,18 @@ func pruneAppState(home string) error {
 		for key, value := range konstellationKeys {
 			keys[key] = value
 		}
+	} else if app == "omniflixhub" {
+		omniflixhubKeys := types.NewKVStoreKeys(
+			"feegrant",    // feegrant.StoreKey,
+			"authz",       // authzkeeper.StoreKey,
+			"alloc",       // alloctypes.StoreKey,
+			"onft",        // onfttypes.StoreKey,
+			"marketplace", // marketplacetypes.StoreKey,
+		)
+
+		for key, value := range omniflixhubKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
