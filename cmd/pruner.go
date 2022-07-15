@@ -345,6 +345,15 @@ func pruneAppState(home string) error {
 		for key, value := range bandchainKeys {
 			keys[key] = value
 		}
+	} else if app == "chihuahua" {
+		chihuahuaKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range chihuahuaKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
