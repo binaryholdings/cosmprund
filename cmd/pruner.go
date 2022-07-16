@@ -490,6 +490,28 @@ func pruneAppState(home string) error {
 		for key, value := range cryptoorgchainKeys {
 			keys[key] = value
 		}
+	} else if app == "irisnet" {
+		irisnetKeys := types.NewKVStoreKeys(
+			"guardian", // guardiantypes.StoreKey,
+			"token",    // tokentypes.StoreKey,
+			"nft",      // nfttypes.StoreKey,
+			"htlc",     // htlctypes.StoreKey,
+			"record",   // recordtypes.StoreKey,
+			"coinswap", // coinswaptypes.StoreKey,
+			"service",  // servicetypes.StoreKey,
+			"oracle",   // oracletypes.StoreKey,
+			"random",   // randomtypes.StoreKey,
+			"farm",     // farmtypes.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+			"tibc",     // tibchost.StoreKey,
+			"NFT",      // tibcnfttypes.StoreKey,
+			"MT",       // tibcmttypes.StoreKey,
+			"mt",       // mttypes.StoreKey,
+		)
+
+		for key, value := range irisnetKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
