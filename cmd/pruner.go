@@ -528,6 +528,16 @@ func pruneAppState(home string) error {
 		for key, value := range axelarKeys {
 			keys[key] = value
 		}
+	} else if app == "umee" {
+		umeeKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"gravity",  // gravitytypes.StoreKey,
+		)
+
+		for key, value := range umeeKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
