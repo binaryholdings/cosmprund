@@ -458,6 +458,16 @@ func pruneAppState(home string) error {
 		for key, value := range assetmantleKeys {
 			keys[key] = value
 		}
+	} else if app == "fetchhub" {
+		fetchhubKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"wasm",     // wasm.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+		)
+
+		for key, value := range fetchhubKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
