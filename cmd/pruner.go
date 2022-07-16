@@ -435,6 +435,18 @@ func pruneAppState(home string) error {
 		for key, value := range cerberusKeys {
 			keys[key] = value
 		}
+	} else if app == "bitsong" {
+		bitsongKeys := types.NewKVStoreKeys(
+			"feegrant",               // feegrant.StoreKey,
+			"authz",                  // authzkeeper.StoreKey,
+			"packetfowardmiddleware", // routertypes.StoreKey,
+			"fantoken",               // fantokentypes.StoreKey,
+			"merkledrop",             // merkledroptypes.StoreKey,
+		)
+
+		for key, value := range bitsongKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
