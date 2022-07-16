@@ -512,6 +512,22 @@ func pruneAppState(home string) error {
 		for key, value := range irisnetKeys {
 			keys[key] = value
 		}
+	} else if app == "axelar" {
+		axelarKeys := types.NewKVStoreKeys(
+			"feegrant",   // feegrant.StoreKey,
+			"vote",       // voteTypes.StoreKey,
+			"evm",        // evmTypes.StoreKey,
+			"snapshot",   // snapTypes.StoreKey,
+			"tss",        // tssTypes.StoreKey,
+			"nexus",      // nexusTypes.StoreKey,
+			"axelarnet",  // axelarnetTypes.StoreKey,
+			"reward",     // rewardTypes.StoreKey,
+			"permission", // permissionTypes.StoreKey,
+		)
+
+		for key, value := range axelarKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
