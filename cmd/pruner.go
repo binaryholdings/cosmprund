@@ -393,6 +393,21 @@ func pruneAppState(home string) error {
 		for key, value := range vidulumKeys {
 			keys[key] = value
 		}
+	} else if app == "provenance" {
+		provenanceKeys := types.NewKVStoreKeys(
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"metadata",  // metadatatypes.StoreKey,
+			"marker",    // markertypes.StoreKey,
+			"attribute", // attributetypes.StoreKey,
+			"name",      // nametypes.StoreKey,
+			"msgfees",   // msgfeestypes.StoreKey,
+			"wasm",      // wasm.StoreKey,
+		)
+
+		for key, value := range provenanceKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
