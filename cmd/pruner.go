@@ -447,6 +447,17 @@ func pruneAppState(home string) error {
 		for key, value := range bitsongKeys {
 			keys[key] = value
 		}
+	} else if app == "assetmantle" {
+		assetmantleKeys := types.NewKVStoreKeys(
+			"feegrant",               // feegrant.StoreKey,
+			"authz",                  // authzKeeper.StoreKey,
+			"packetfowardmiddleware", // routerTypes.StoreKey,
+			"icahost",                // icaHostTypes.StoreKey,
+		)
+
+		for key, value := range assetmantleKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
