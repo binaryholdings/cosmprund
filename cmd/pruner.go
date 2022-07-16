@@ -478,6 +478,18 @@ func pruneAppState(home string) error {
 		for key, value := range persistentKeys {
 			keys[key] = value
 		}
+	} else if app == "cryptoorgchain" {
+		cryptoorgchainKeys := types.NewKVStoreKeys(
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"chainmain", // chainmaintypes.StoreKey,
+			"supply",    // supplytypes.StoreKey,
+			"nft",       // nfttypes.StoreKey,
+		)
+
+		for key, value := range cryptoorgchainKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
