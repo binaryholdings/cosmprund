@@ -120,8 +120,8 @@ func pruneAppState(home string) error {
 			"liquidity",
 			"feegrant",
 			"authz",
-			"packetfowardmiddleware", /* routertypes.StoreKey, */
-			"icahost" /* icahosttypes.StoreKey */)
+			"icahost", // icahosttypes.StoreKey
+		)
 		for key, value := range cosmoshubKeys {
 			keys[key] = value
 		}
@@ -406,6 +406,16 @@ func pruneAppState(home string) error {
 		)
 
 		for key, value := range provenanceKeys {
+			keys[key] = value
+		}
+	} else if app == "dig" {
+		digKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range digKeys {
 			keys[key] = value
 		}
 	}
