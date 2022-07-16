@@ -384,6 +384,15 @@ func pruneAppState(home string) error {
 		for key, value := range omniflixhubKeys {
 			keys[key] = value
 		}
+	} else if app == "vidulum" {
+		vidulumKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"vidulum",  // vidulummoduletypes.StoreKey,
+		)
+
+		for key, value := range vidulumKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
