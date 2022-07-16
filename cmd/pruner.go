@@ -426,6 +426,15 @@ func pruneAppState(home string) error {
 		for key, value := range comdexKeys {
 			keys[key] = value
 		}
+	} else if app == "cerberus" {
+		cerberusKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+		)
+
+		for key, value := range cerberusKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
