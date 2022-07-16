@@ -468,6 +468,16 @@ func pruneAppState(home string) error {
 		for key, value := range fetchhubKeys {
 			keys[key] = value
 		}
+	} else if app == "persistent" {
+		persistentKeys := types.NewKVStoreKeys(
+			"halving",  // halving.StoreKey,
+			"authz",    // sdkAuthzKeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+		)
+
+		for key, value := range persistentKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
