@@ -418,6 +418,14 @@ func pruneAppState(home string) error {
 		for key, value := range digKeys {
 			keys[key] = value
 		}
+	} else if app == "comdex" {
+		comdexKeys := types.NewKVStoreKeys(
+			"wasm", // wasm.StoreKey,
+		)
+
+		for key, value := range comdexKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
