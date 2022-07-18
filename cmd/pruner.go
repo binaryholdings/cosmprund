@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -99,10 +98,444 @@ func pruneAppState(home string) error {
 	)
 
 	if app == "osmosis" {
-		osmoKeys := types.NewKVStoreKeys("gamm", "lockup", "claim", "incentives",
-			"epochs", "poolincentives", authzkeeper.StoreKey, "txfees",
-			"bech32ibc")
+		osmoKeys := types.NewKVStoreKeys(
+			"icahost",        //icahosttypes.StoreKey,
+			"gamm",           // gammtypes.StoreKey,
+			"lockup",         //lockuptypes.StoreKey,
+			"incentives",     // incentivestypes.StoreKey,
+			"epochs",         // epochstypes.StoreKey,
+			"poolincentives", //poolincentivestypes.StoreKey,
+			"authz",          //authzkeeper.StoreKey,
+			"txfees",         // txfeestypes.StoreKey,
+			"superfluid",     // superfluidtypes.StoreKey,
+			"bech32ibc",      // bech32ibctypes.StoreKey,
+			"wasm",           // wasm.StoreKey,
+			"tokenfactory",   //tokenfactorytypes.StoreKey,
+		)
 		for key, value := range osmoKeys {
+			keys[key] = value
+		}
+	} else if app == "cosmoshub" {
+		cosmoshubKeys := types.NewKVStoreKeys(
+			"liquidity",
+			"feegrant",
+			"authz",
+			"icahost", // icahosttypes.StoreKey
+		)
+		for key, value := range cosmoshubKeys {
+			keys[key] = value
+		}
+	} else if app == "terra" { // terra classic
+		terraKeys := types.NewKVStoreKeys(
+			"oracle",   // oracletypes.StoreKey,
+			"market",   // markettypes.StoreKey,
+			"treasury", //treasurytypes.StoreKey,
+			"wasm",     // wasmtypes.StoreKey,
+			"authz",    //authzkeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey
+		)
+		for key, value := range terraKeys {
+			keys[key] = value
+		}
+	} else if app == "kava" {
+		kavaKeys := types.NewKVStoreKeys(
+			"feemarket", //feemarkettypes.StoreKey,
+			"authz",     //authzkeeper.StoreKey,
+			"kavadist",  //kavadisttypes.StoreKey,
+			"auction",   //auctiontypes.StoreKey,
+			"issuance",  //issuancetypes.StoreKey,
+			"bep3",      //bep3types.StoreKey,
+			//"pricefeed", //pricefeedtypes.StoreKey,
+			//"swap",      //swaptypes.StoreKey,
+			"cdp",       //cdptypes.StoreKey,
+			"hard",      //hardtypes.StoreKey,
+			"committee", //committeetypes.StoreKey,
+			"incentive", //incentivetypes.StoreKey,
+			"evmutil",   //evmutiltypes.StoreKey,
+			"savings",   //savingstypes.StoreKey,
+			"bridge",    //bridgetypes.StoreKey,
+		)
+		for key, value := range kavaKeys {
+			keys[key] = value
+		}
+
+		delete(keys, "mint") // minttypes.StoreKey
+	} else if app == "evmos" {
+		evmosKeys := types.NewKVStoreKeys(
+			"feegrant",   // feegrant.StoreKey,
+			"authz",      // authzkeeper.StoreKey,
+			"evm",        // evmtypes.StoreKey,
+			"feemarket",  // feemarkettypes.StoreKey,
+			"inflation",  // inflationtypes.StoreKey,
+			"erc20",      // erc20types.StoreKey,
+			"incentives", // incentivestypes.StoreKey,
+			"epochs",     // epochstypes.StoreKey,
+			"claims",     // claimstypes.StoreKey,
+			"vesting",    // vestingtypes.StoreKey,
+		)
+		for key, value := range evmosKeys {
+			keys[key] = value
+		}
+	} else if app == "gravitybridge" {
+		gravitybridgeKeys := types.NewKVStoreKeys(
+			"authz",     // authzkeeper.StoreKey,
+			"gravity",   //  gravitytypes.StoreKey,
+			"bech32ibc", // bech32ibctypes.StoreKey,
+		)
+		for key, value := range gravitybridgeKeys {
+			keys[key] = value
+		}
+	} else if app == "sifchain" {
+		sifchainKeys := types.NewKVStoreKeys(
+			"feegrant",      // feegrant.StoreKey,
+			"dispensation",  // disptypes.StoreKey,
+			"ethbridge",     // ethbridgetypes.StoreKey,
+			"clp",           // clptypes.StoreKey,
+			"oracle",        // oracletypes.StoreKey,
+			"tokenregistry", // tokenregistrytypes.StoreKey,
+			"admin",         // admintypes.StoreKey,
+		)
+		for key, value := range sifchainKeys {
+			keys[key] = value
+		}
+	} else if app == "starname" {
+		starnameKeys := types.NewKVStoreKeys(
+			"wasm",          // wasm.StoreKey,
+			"configuration", // configuration.StoreKey,
+			"starname",      // starname.DomainStoreKey,
+		)
+		for key, value := range starnameKeys {
+			keys[key] = value
+		}
+	} else if app == "regen" {
+		regenKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // uthzkeeper.StoreKey,
+		)
+		for key, value := range regenKeys {
+			keys[key] = value
+		}
+	} else if app == "akash" {
+		akashKeys := types.NewKVStoreKeys(
+			"authz",      // authzkeeper.StoreKey,
+			"escrow",     // escrow.StoreKey,
+			"deployment", // deployment.StoreKey,
+			"market",     // market.StoreKey,
+			"provider",   // provider.StoreKey,
+			"audit",      // audit.StoreKey,
+			"cert",       // cert.StoreKey,
+			"inflation",  // inflation.StoreKey,
+		)
+		for key, value := range akashKeys {
+			keys[key] = value
+		}
+	} else if app == "sentinel" {
+		sentinelKeys := types.NewKVStoreKeys(
+			"authz",        // authzkeeper.StoreKey,
+			"distribution", // distributiontypes.StoreKey,
+			"feegrant",     // feegrant.StoreKey,
+			"custommint",   // customminttypes.StoreKey,
+			"swap",         // swaptypes.StoreKey,
+			"vpn",          // vpntypes.StoreKey,
+		)
+		for key, value := range sentinelKeys {
+			keys[key] = value
+		}
+	} else if app == "emoney" {
+		emoneyKeys := types.NewKVStoreKeys(
+			"liquidityprovider", // lptypes.StoreKey,
+			"issuer",            // issuer.StoreKey,
+			"authority",         // authority.StoreKey,
+			"market",            // market.StoreKey,
+			//"market_indices",    // market.StoreKeyIdx,
+			"buyback",   // buyback.StoreKey,
+			"inflation", // inflation.StoreKey,
+		)
+
+		for key, value := range emoneyKeys {
+			keys[key] = value
+		}
+	} else if app == "ixo" {
+		ixoKeys := types.NewKVStoreKeys(
+			"did",      // didtypes.StoreKey,
+			"bonds",    // bondstypes.StoreKey,
+			"payments", // paymentstypes.StoreKey,
+			"project",  // projecttypes.StoreKey,
+		)
+
+		for key, value := range ixoKeys {
+			keys[key] = value
+		}
+	} else if app == "juno" {
+		junoKeys := types.NewKVStoreKeys(
+			"authz",    // authzkeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+			"icahost",  // icahosttypes.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range junoKeys {
+			keys[key] = value
+		}
+	} else if app == "likecoin" {
+		likecoinKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"iscn",     // iscntypes.StoreKey,
+		)
+
+		for key, value := range likecoinKeys {
+			keys[key] = value
+		}
+	} else if app == "kichain" {
+		kichainKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range kichainKeys {
+			keys[key] = value
+		}
+	} else if app == "cyber" {
+		cyberKeys := types.NewKVStoreKeys(
+			"liquidity", // liquiditytypes.StoreKey,
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"bandwidth", // bandwidthtypes.StoreKey,
+			"graph",     // graphtypes.StoreKey,
+			"rank",      // ranktypes.StoreKey,
+			"grid",      // gridtypes.StoreKey,
+			"dmn",       // dmntypes.StoreKey,
+			"wasm",      // wasm.StoreKey,
+		)
+
+		for key, value := range cyberKeys {
+			keys[key] = value
+		}
+	} else if app == "cheqd" {
+		cheqdKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"cheqd",    // cheqdtypes.StoreKey,
+		)
+
+		for key, value := range cheqdKeys {
+			keys[key] = value
+		}
+	} else if app == "stargaze" {
+		stargazeKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"claim",    // claimmoduletypes.StoreKey,
+			"alloc",    // allocmoduletypes.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range stargazeKeys {
+			keys[key] = value
+		}
+	} else if app == "bandchain" {
+		bandchainKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"oracle",   // oracletypes.StoreKey,
+		)
+
+		for key, value := range bandchainKeys {
+			keys[key] = value
+		}
+	} else if app == "chihuahua" {
+		chihuahuaKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range chihuahuaKeys {
+			keys[key] = value
+		}
+	} else if app == "bitcanna" {
+		bitcannaKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"bcna",     // bcnamoduletypes.StoreKey,
+		)
+
+		for key, value := range bitcannaKeys {
+			keys[key] = value
+		}
+	} else if app == "konstellation" {
+		konstellationKeys := types.NewKVStoreKeys(
+			"oracle", // racletypes.StoreKey,
+			"wasm",   // wasm.StoreKey,
+		)
+
+		for key, value := range konstellationKeys {
+			keys[key] = value
+		}
+	} else if app == "omniflixhub" {
+		omniflixhubKeys := types.NewKVStoreKeys(
+			"feegrant",    // feegrant.StoreKey,
+			"authz",       // authzkeeper.StoreKey,
+			"alloc",       // alloctypes.StoreKey,
+			"onft",        // onfttypes.StoreKey,
+			"marketplace", // marketplacetypes.StoreKey,
+		)
+
+		for key, value := range omniflixhubKeys {
+			keys[key] = value
+		}
+	} else if app == "vidulum" {
+		vidulumKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"vidulum",  // vidulummoduletypes.StoreKey,
+		)
+
+		for key, value := range vidulumKeys {
+			keys[key] = value
+		}
+	} else if app == "provenance" {
+		provenanceKeys := types.NewKVStoreKeys(
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"metadata",  // metadatatypes.StoreKey,
+			"marker",    // markertypes.StoreKey,
+			"attribute", // attributetypes.StoreKey,
+			"name",      // nametypes.StoreKey,
+			"msgfees",   // msgfeestypes.StoreKey,
+			"wasm",      // wasm.StoreKey,
+		)
+
+		for key, value := range provenanceKeys {
+			keys[key] = value
+		}
+	} else if app == "dig" {
+		digKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"wasm",     // wasm.StoreKey,
+		)
+
+		for key, value := range digKeys {
+			keys[key] = value
+		}
+	} else if app == "comdex" {
+		comdexKeys := types.NewKVStoreKeys(
+			"wasm", // wasm.StoreKey,
+		)
+
+		for key, value := range comdexKeys {
+			keys[key] = value
+		}
+	} else if app == "cerberus" {
+		cerberusKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+		)
+
+		for key, value := range cerberusKeys {
+			keys[key] = value
+		}
+	} else if app == "bitsong" {
+		bitsongKeys := types.NewKVStoreKeys(
+			"feegrant",               // feegrant.StoreKey,
+			"authz",                  // authzkeeper.StoreKey,
+			"packetfowardmiddleware", // routertypes.StoreKey,
+			"fantoken",               // fantokentypes.StoreKey,
+			"merkledrop",             // merkledroptypes.StoreKey,
+		)
+
+		for key, value := range bitsongKeys {
+			keys[key] = value
+		}
+	} else if app == "assetmantle" {
+		assetmantleKeys := types.NewKVStoreKeys(
+			"feegrant",               // feegrant.StoreKey,
+			"authz",                  // authzKeeper.StoreKey,
+			"packetfowardmiddleware", // routerTypes.StoreKey,
+			"icahost",                // icaHostTypes.StoreKey,
+		)
+
+		for key, value := range assetmantleKeys {
+			keys[key] = value
+		}
+	} else if app == "fetchhub" {
+		fetchhubKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"wasm",     // wasm.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+		)
+
+		for key, value := range fetchhubKeys {
+			keys[key] = value
+		}
+	} else if app == "persistent" {
+		persistentKeys := types.NewKVStoreKeys(
+			"halving",  // halving.StoreKey,
+			"authz",    // sdkAuthzKeeper.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+		)
+
+		for key, value := range persistentKeys {
+			keys[key] = value
+		}
+	} else if app == "cryptoorgchain" {
+		cryptoorgchainKeys := types.NewKVStoreKeys(
+			"feegrant",  // feegrant.StoreKey,
+			"authz",     // authzkeeper.StoreKey,
+			"chainmain", // chainmaintypes.StoreKey,
+			"supply",    // supplytypes.StoreKey,
+			"nft",       // nfttypes.StoreKey,
+		)
+
+		for key, value := range cryptoorgchainKeys {
+			keys[key] = value
+		}
+	} else if app == "irisnet" {
+		irisnetKeys := types.NewKVStoreKeys(
+			"guardian", // guardiantypes.StoreKey,
+			"token",    // tokentypes.StoreKey,
+			"nft",      // nfttypes.StoreKey,
+			"htlc",     // htlctypes.StoreKey,
+			"record",   // recordtypes.StoreKey,
+			"coinswap", // coinswaptypes.StoreKey,
+			"service",  // servicetypes.StoreKey,
+			"oracle",   // oracletypes.StoreKey,
+			"random",   // randomtypes.StoreKey,
+			"farm",     // farmtypes.StoreKey,
+			"feegrant", // feegrant.StoreKey,
+			"tibc",     // tibchost.StoreKey,
+			"NFT",      // tibcnfttypes.StoreKey,
+			"MT",       // tibcmttypes.StoreKey,
+			"mt",       // mttypes.StoreKey,
+		)
+
+		for key, value := range irisnetKeys {
+			keys[key] = value
+		}
+	} else if app == "axelar" {
+		axelarKeys := types.NewKVStoreKeys(
+			"feegrant",   // feegrant.StoreKey,
+			"vote",       // voteTypes.StoreKey,
+			"evm",        // evmTypes.StoreKey,
+			"snapshot",   // snapTypes.StoreKey,
+			"tss",        // tssTypes.StoreKey,
+			"nexus",      // nexusTypes.StoreKey,
+			"axelarnet",  // axelarnetTypes.StoreKey,
+			"reward",     // rewardTypes.StoreKey,
+			"permission", // permissionTypes.StoreKey,
+		)
+
+		for key, value := range axelarKeys {
+			keys[key] = value
+		}
+	} else if app == "umee" {
+		umeeKeys := types.NewKVStoreKeys(
+			"feegrant", // feegrant.StoreKey,
+			"authz",    // authzkeeper.StoreKey,
+			"gravity",  // gravitytypes.StoreKey,
+		)
+
+		for key, value := range umeeKeys {
 			keys[key] = value
 		}
 	}
