@@ -71,19 +71,32 @@ func pruneCmd() *cobra.Command {
 func pruneAppState(home string) error {
 
 	// this has the potential to expand size, should just use state sync
-	// dbType := db.BackendType(backend)
+	dbType := db.BackendType(backend)
 
 	dbDir := rootify(dataDir, home)
 
-	o := opt.Options{
-		DisableSeeksCompaction: true,
+	// Get application
+	var appDB db.DB
+	if dbType == db.GoLevelDBBackend {
+		o := opt.Options{
+			DisableSeeksCompaction: true,
+		}
+
+		levelAppDB, err := db.NewGoLevelDBWithOpts("application", dbDir, &o)
+		if err != nil {
+			return err
+		}
+
+		appDB = levelAppDB
+	} else {
+		var err error
+		appDB, err = db.NewDB("application", dbType, dbDir)
+		if err != nil {
+			return err
+		}
 	}
 
-	// Get BlockStore
-	appDB, err := db.NewGoLevelDBWithOpts("application", dbDir, &o)
-	if err != nil {
-		return err
-	}
+	var err error
 
 	//TODO: need to get all versions in the store, setting randomly is too slow
 	fmt.Println("pruning application state")
@@ -576,25 +589,53 @@ func pruneAppState(home string) error {
 
 // pruneTMData prunes the tendermint blocks and state based on the amount of blocks to keep
 func pruneTMData(home string) error {
+	dbType := db.BackendType(backend)
 
 	dbDir := rootify(dataDir, home)
 
-	o := opt.Options{
-		DisableSeeksCompaction: true,
+	var blockStoreDB db.DB
+
+	// Get blockstore
+	if dbType == db.GoLevelDBBackend {
+		o := opt.Options{
+			DisableSeeksCompaction: true,
+		}
+		bDB, err := db.NewGoLevelDBWithOpts("blockstore", dbDir, &o)
+		if err != nil {
+			return err
+		}
+
+		blockStoreDB = bDB
+	} else {
+		var err error
+		blockStoreDB, err = db.NewDB("blockstore", dbType, dbDir)
+		if err != nil {
+			return err
+		}
 	}
 
-	// Get BlockStore
-	blockStoreDB, err := db.NewGoLevelDBWithOpts("blockstore", dbDir, &o)
-	if err != nil {
-		return err
-	}
 	blockStore := tmstore.NewBlockStore(blockStoreDB)
 
 	// Get StateStore
-	stateDB, err := db.NewGoLevelDBWithOpts("state", dbDir, &o)
-	if err != nil {
-		return err
+	var stateDB db.DB
+	if dbType == db.GoLevelDBBackend {
+		o := opt.Options{
+			DisableSeeksCompaction: true,
+		}
+		sDB, err := db.NewGoLevelDBWithOpts("state", dbDir, &o)
+		if err != nil {
+			return err
+		}
+		stateDB = sDB
+	} else {
+		var err error
+		stateDB, err = db.NewDB("state", dbType, dbDir)
+		if err != nil {
+			return err
+		}
 	}
+
+	var err error
 
 	stateStore := state.NewStore(stateDB)
 
@@ -611,9 +652,11 @@ func pruneTMData(home string) error {
 			return err
 		}
 
-		fmt.Println("compacting block store")
-		if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
-			return err
+		if dbType == db.GoLevelDBBackend {
+			fmt.Println("compacting block store")
+			if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -626,9 +669,11 @@ func pruneTMData(home string) error {
 		return err
 	}
 
-	fmt.Println("compacting state store")
-	if err := stateDB.ForceCompact(nil, nil); err != nil {
-		return err
+	if dbType == db.GoLevelDBBackend {
+		fmt.Println("compacting state store")
+		if err := stateDB.ForceCompact(nil, nil); err != nil {
+			return err
+		}
 	}
 
 	return nil
