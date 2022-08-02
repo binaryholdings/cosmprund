@@ -578,9 +578,12 @@ func pruneAppState(home string) error {
 
 	appStore.PruneStores()
 
-	fmt.Println("compacting application state")
-	if err := appDB.ForceCompact(nil, nil); err != nil {
-		return err
+	if dbType == db.GoLevelDBBackend {
+		fmt.Println("compacting application state")
+		levelAppDB := appDB.(*db.GoLevelDB)
+		if err := levelAppDB.ForceCompact(nil, nil); err != nil {
+			return err
+		}
 	}
 
 	//create a new app store
@@ -654,7 +657,8 @@ func pruneTMData(home string) error {
 
 		if dbType == db.GoLevelDBBackend {
 			fmt.Println("compacting block store")
-			if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
+			leveldbBlock := blockStoreDB.(*db.GoLevelDB)
+			if err := leveldbBlock.ForceCompact(nil, nil); err != nil {
 				return err
 			}
 		}
@@ -671,7 +675,8 @@ func pruneTMData(home string) error {
 
 	if dbType == db.GoLevelDBBackend {
 		fmt.Println("compacting state store")
-		if err := stateDB.ForceCompact(nil, nil); err != nil {
+		leveldbState := stateDB.(*db.GoLevelDB)
+		if err := leveldbState.ForceCompact(nil, nil); err != nil {
 			return err
 		}
 	}
