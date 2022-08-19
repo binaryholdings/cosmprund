@@ -282,6 +282,9 @@ func pruneAppState(home string) error {
 			"feegrant", // feegrant.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
 			"iscn",     // iscntypes.StoreKey,
+			"mint",     // minttypes.StoreKey,
+			"nft",      // nftkeeper.StoreKey,
+		        "likenft",  // likenfttypes.StoreKey,
 		)
 
 		for key, value := range likecoinKeys {
