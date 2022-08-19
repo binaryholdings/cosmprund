@@ -550,7 +550,7 @@ func pruneAppState(home string) error {
 			"authz",         // authzkeeper.StoreKey,
 			// mainnet
 			"profiles",      // profilestypes.StoreKey,
-			// staging
+			// testnet
 			"subspaces",     // subspacestypes.StoreKey,
 			"posts",         // poststypes.StoreKey,
 			"relationships", // relationshipstypes.StoreKey,
