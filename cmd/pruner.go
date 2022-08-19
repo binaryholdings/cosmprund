@@ -542,9 +542,19 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "desmos" {
 		desmosKeys := types.NewKVStoreKeys(
-			"posts",     // poststypes.StoreKey,
-			"profiles",  // profilestypes.StoreKey,
-			"subspaces", // subspacestypes.StoreKey,
+			// common modules
+			"feegrant",     // feegrant.StoreKey,
+			"wasm",         // wasm.StoreKey,
+			"authz",        // authzkeeper.StoreKey,
+			// mainnet
+			"profiles",     // profilestypes.StoreKey,
+			// staging
+			"subspaces",    // subspacestypes.StoreKey,
+			"posts",        // poststypes.StoreKey,
+			"relationships, // relationshipstypes.StoreKey,
+			"reports,       // reports.StoreKey,
+			"reactions,     // reactions.StoreKey,
+			"fees,          // fees.StoreKey,
 		)
 
 		for key, value := range desmosKeys {
