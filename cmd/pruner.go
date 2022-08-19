@@ -281,7 +281,7 @@ func pruneAppState(home string) error {
 		likecoinKeys := types.NewKVStoreKeys(
 			"feegrant", // feegrant.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
-			"iscn",     // iscntypes.StoreKey
+			"iscn",     // iscntypes.StoreKey,
 			"nft",      // nftkeeper.StoreKey,
 		        "likenft",  // likenfttypes.StoreKey,
 		)
