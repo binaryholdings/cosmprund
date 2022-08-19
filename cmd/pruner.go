@@ -540,6 +540,16 @@ func pruneAppState(home string) error {
 		for key, value := range umeeKeys {
 			keys[key] = value
 		}
+	} else if app == "desmos" {
+		desmosKeys := types.NewKVStoreKeys(
+			"posts",     // poststypes.StoreKey,
+			"profiles",  // profilestypes.StoreKey,
+			"subspaces", // subspacestypes.StoreKey,
+		)
+
+		for key, value := range desmosKeys {
+			keys[key] = value
+		}
 	}
 
 	// TODO: cleanup app state
