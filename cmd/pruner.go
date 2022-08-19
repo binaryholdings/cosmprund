@@ -279,8 +279,10 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "likecoin" {
 		likecoinKeys := types.NewKVStoreKeys(
+			// common modules
 			"feegrant", // feegrant.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
+			// custom modules
 			"iscn",     // iscntypes.StoreKey,
 			"nft",      // nftkeeper.StoreKey,
 		        "likenft",  // likenfttypes.StoreKey,
