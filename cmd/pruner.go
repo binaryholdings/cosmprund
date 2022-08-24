@@ -96,6 +96,8 @@ func pruneAppState(home string) error {
 		}
 	}
 
+	defer appDB.Close()
+
 	var err error
 
 	//TODO: need to get all versions in the store, setting randomly is too slow
@@ -618,6 +620,7 @@ func pruneTMData(home string) error {
 	}
 
 	blockStore := tmstore.NewBlockStore(blockStoreDB)
+	defer blockStore.Close()
 
 	// Get StateStore
 	var stateDB db.DB
