@@ -279,9 +279,13 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "likecoin" {
 		likecoinKeys := types.NewKVStoreKeys(
+			// common modules
 			"feegrant", // feegrant.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
+			// custom modules
 			"iscn",     // iscntypes.StoreKey,
+			"nft",      // nftkeeper.StoreKey,
+		        "likenft",  // likenfttypes.StoreKey,
 		)
 
 		for key, value := range likecoinKeys {
@@ -536,6 +540,26 @@ func pruneAppState(home string) error {
 		)
 
 		for key, value := range umeeKeys {
+			keys[key] = value
+		}
+	} else if app == "desmos" {
+		desmosKeys := types.NewKVStoreKeys(
+			// common modules
+			"feegrant",      // feegrant.StoreKey,
+			"wasm",          // wasm.StoreKey,
+			"authz",         // authzkeeper.StoreKey,
+			// mainnet
+			"profiles",      // profilestypes.StoreKey,
+			// testnet
+			"subspaces",     // subspacestypes.StoreKey,
+			"posts",         // poststypes.StoreKey,
+			"relationships", // relationshipstypes.StoreKey,
+			"reports",       // reports.StoreKey,
+			"reactions",     // reactions.StoreKey,
+			"fees",          // fees.StoreKey,
+		)
+
+		for key, value := range desmosKeys {
 			keys[key] = value
 		}
 	}
