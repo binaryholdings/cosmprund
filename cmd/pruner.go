@@ -285,10 +285,25 @@ func pruneAppState(home string) error {
 			// custom modules
 			"iscn",     // iscntypes.StoreKey,
 			"nft",      // nftkeeper.StoreKey,
-		        "likenft",  // likenfttypes.StoreKey,
+			"likenft",  // likenfttypes.StoreKey,
 		)
 
 		for key, value := range likecoinKeys {
+			keys[key] = value
+		}
+	} else if app == "teritori" {
+		teritoriKeys := types.NewKVStoreKeys(
+			// common modules
+			"feegrant",               // feegrant.StoreKey,
+			"authz",                  // authzkeeper.StoreKey,
+			"packetfowardmiddleware", // routertypes.StoreKey,
+			"icahost",                // icahosttypes.StoreKey,
+			"wasm",                   // wasm.StoreKey,
+			// custom modules
+			"airdrop",                // airdroptypes.StoreKey,
+		)
+
+		for key, value := range teritoriKeys {
 			keys[key] = value
 		}
 	} else if app == "kichain" {
