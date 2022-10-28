@@ -311,6 +311,7 @@ func pruneAppState(home string) error {
 		// https://github.com/JackalLabs/canine-chain/blob/master/app/app.go#L347
 		jackalKeys := types.NewKVStoreKeys(
 			// common modules
+<<<<<<< HEAD
 			"feegrant", // feegrant.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
 			"wasm",     // wasm.StoreKey,
