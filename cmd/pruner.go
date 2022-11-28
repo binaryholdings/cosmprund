@@ -440,6 +440,7 @@ func pruneAppState(home string) error {
 	} else if app == "beezee" {
 		beezeeKeys := types.NewKVStoreKeys(
 			"feegrant", // feegrant.StoreKey,
+			"scavenge", //scavengemodule.Storekey,
 		)
 
 		for key, value := range beezeeKeys {
