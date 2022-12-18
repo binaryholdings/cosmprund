@@ -593,17 +593,17 @@ func pruneAppState(home string) error {
 			keys[key] = value
 		}
 	} else if app == "desmos" {
+	    // https://github.com/desmos-labs/desmos/blob/master/app/app.go#L388
 		desmosKeys := types.NewKVStoreKeys(
 			// common modules
 			"feegrant", // feegrant.StoreKey,
 			"wasm",     // wasm.StoreKey,
 			"authz",    // authzkeeper.StoreKey,
-			// mainnet
+			// mainnet since v4.7.0
 			"profiles", // profilestypes.StoreKey,
-			// testnet
+			"relationships", // relationshipstypes.StoreKey,
 			"subspaces",     // subspacestypes.StoreKey,
 			"posts",         // poststypes.StoreKey,
-			"relationships", // relationshipstypes.StoreKey,
 			"reports",       // reports.StoreKey,
 			"reactions",     // reactions.StoreKey,
 			"fees",          // fees.StoreKey,
