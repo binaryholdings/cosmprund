@@ -571,6 +571,7 @@ func pruneAppState(home string) error {
 			"vote",       // voteTypes.StoreKey,
 			"evm",        // evmTypes.StoreKey,
 			"snapshot",   // snapTypes.StoreKey,
+			"multisig",   // multisigTypes.StoreKey,
 			"tss",        // tssTypes.StoreKey,
 			"nexus",      // nexusTypes.StoreKey,
 			"axelarnet",  // axelarnetTypes.StoreKey,
