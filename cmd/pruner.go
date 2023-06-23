@@ -111,7 +111,6 @@ func pruneAppState(home string) error {
 			"incentives",     // incentivestypes.StoreKey,
 			"epochs",         // epochstypes.StoreKey,
 			"poolincentives", //poolincentivestypes.StoreKey,
-			"authz",          //authzkeeper.StoreKey,
 			"txfees",         // txfeestypes.StoreKey,
 			"superfluid",     // superfluidtypes.StoreKey,
 			"bech32ibc",      // bech32ibctypes.StoreKey,
@@ -124,8 +123,6 @@ func pruneAppState(home string) error {
 	} else if app == "cosmoshub" {
 		cosmoshubKeys := types.NewKVStoreKeys(
 			"liquidity",
-			"feegrant",
-			"authz",
 			"icahost", // icahosttypes.StoreKey
 		)
 		for key, value := range cosmoshubKeys {
@@ -137,8 +134,6 @@ func pruneAppState(home string) error {
 			"market",   // markettypes.StoreKey,
 			"treasury", //treasurytypes.StoreKey,
 			"wasm",     // wasmtypes.StoreKey,
-			"authz",    //authzkeeper.StoreKey,
-			"feegrant", // feegrant.StoreKey
 		)
 		for key, value := range terraKeys {
 			keys[key] = value
@@ -146,7 +141,6 @@ func pruneAppState(home string) error {
 	} else if app == "kava" {
 		kavaKeys := types.NewKVStoreKeys(
 			"feemarket", //feemarkettypes.StoreKey,
-			"authz",     //authzkeeper.StoreKey,
 			"kavadist",  //kavadisttypes.StoreKey,
 			"auction",   //auctiontypes.StoreKey,
 			"issuance",  //issuancetypes.StoreKey,
@@ -168,8 +162,6 @@ func pruneAppState(home string) error {
 		delete(keys, "mint") // minttypes.StoreKey
 	} else if app == "evmos" {
 		evmosKeys := types.NewKVStoreKeys(
-			"feegrant",   // feegrant.StoreKey,
-			"authz",      // authzkeeper.StoreKey,
 			"evm",        // evmtypes.StoreKey,
 			"feemarket",  // feemarkettypes.StoreKey,
 			"inflation",  // inflationtypes.StoreKey,
@@ -184,7 +176,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "gravitybridge" {
 		gravitybridgeKeys := types.NewKVStoreKeys(
-			"authz",     // authzkeeper.StoreKey,
 			"gravity",   //  gravitytypes.StoreKey,
 			"bech32ibc", // bech32ibctypes.StoreKey,
 		)
@@ -193,7 +184,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "sifchain" {
 		sifchainKeys := types.NewKVStoreKeys(
-			"feegrant",      // feegrant.StoreKey,
 			"dispensation",  // disptypes.StoreKey,
 			"ethbridge",     // ethbridgetypes.StoreKey,
 			"clp",           // clptypes.StoreKey,
@@ -215,15 +205,12 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "regen" {
 		regenKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // uthzkeeper.StoreKey,
 		)
 		for key, value := range regenKeys {
 			keys[key] = value
 		}
 	} else if app == "akash" {
 		akashKeys := types.NewKVStoreKeys(
-			"authz",      // authzkeeper.StoreKey,
 			"escrow",     // escrow.StoreKey,
 			"deployment", // deployment.StoreKey,
 			"market",     // market.StoreKey,
@@ -237,9 +224,7 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "sentinel" {
 		sentinelKeys := types.NewKVStoreKeys(
-			"authz",        // authzkeeper.StoreKey,
 			"distribution", // distributiontypes.StoreKey,
-			"feegrant",     // feegrant.StoreKey,
 			"custommint",   // customminttypes.StoreKey,
 			"swap",         // swaptypes.StoreKey,
 			"vpn",          // vpntypes.StoreKey,
@@ -274,8 +259,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "juno" {
 		junoKeys := types.NewKVStoreKeys(
-			"authz",    // authzkeeper.StoreKey,
-			"feegrant", // feegrant.StoreKey,
 			"icahost",  // icahosttypes.StoreKey,
 			"wasm",     // wasm.StoreKey,
 		)
@@ -332,8 +315,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "kichain" {
 		kichainKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"wasm",     // wasm.StoreKey,
 		)
 
@@ -343,8 +324,6 @@ func pruneAppState(home string) error {
 	} else if app == "cyber" {
 		cyberKeys := types.NewKVStoreKeys(
 			"liquidity", // liquiditytypes.StoreKey,
-			"feegrant",  // feegrant.StoreKey,
-			"authz",     // authzkeeper.StoreKey,
 			"bandwidth", // bandwidthtypes.StoreKey,
 			"graph",     // graphtypes.StoreKey,
 			"rank",      // ranktypes.StoreKey,
@@ -358,8 +337,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "cheqd" {
 		cheqdKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"cheqd",    // cheqdtypes.StoreKey,
 		)
 
@@ -368,10 +345,8 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "stargaze" {
 		stargazeKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"claim",    // claimmoduletypes.StoreKey,
 			"alloc",    // allocmoduletypes.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"wasm",     // wasm.StoreKey,
 		)
 
@@ -380,8 +355,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "bandchain" {
 		bandchainKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"oracle",   // oracletypes.StoreKey,
 		)
 
@@ -390,7 +363,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "chihuahua" {
 		chihuahuaKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"wasm",     // wasm.StoreKey,
 		)
 
@@ -399,7 +371,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "bitcanna" {
 		bitcannaKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"bcna",     // bcnamoduletypes.StoreKey,
 		)
 
@@ -417,8 +388,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "omniflixhub" {
 		omniflixhubKeys := types.NewKVStoreKeys(
-			"feegrant",    // feegrant.StoreKey,
-			"authz",       // authzkeeper.StoreKey,
 			"alloc",       // alloctypes.StoreKey,
 			"onft",        // onfttypes.StoreKey,
 			"marketplace", // marketplacetypes.StoreKey,
@@ -429,7 +398,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "vidulum" {
 		vidulumKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"vidulum",  // vidulummoduletypes.StoreKey,
 		)
 
@@ -438,7 +406,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "beezee" {
 		beezeeKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"scavenge", //scavengemodule.Storekey,
 		)
 
@@ -447,8 +414,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "provenance" {
 		provenanceKeys := types.NewKVStoreKeys(
-			"feegrant",  // feegrant.StoreKey,
-			"authz",     // authzkeeper.StoreKey,
 			"metadata",  // metadatatypes.StoreKey,
 			"marker",    // markertypes.StoreKey,
 			"attribute", // attributetypes.StoreKey,
@@ -462,8 +427,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "dig" {
 		digKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"wasm",     // wasm.StoreKey,
 		)
 
@@ -478,19 +441,8 @@ func pruneAppState(home string) error {
 		for key, value := range comdexKeys {
 			keys[key] = value
 		}
-	} else if app == "cerberus" {
-		cerberusKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
-		)
-
-		for key, value := range cerberusKeys {
-			keys[key] = value
-		}
 	} else if app == "bitsong" {
 		bitsongKeys := types.NewKVStoreKeys(
-			"feegrant",               // feegrant.StoreKey,
-			"authz",                  // authzkeeper.StoreKey,
 			"packetfowardmiddleware", // routertypes.StoreKey,
 			"fantoken",               // fantokentypes.StoreKey,
 			"merkledrop",             // merkledroptypes.StoreKey,
@@ -501,8 +453,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "assetmantle" {
 		assetmantleKeys := types.NewKVStoreKeys(
-			"feegrant",               // feegrant.StoreKey,
-			"authz",                  // authzKeeper.StoreKey,
 			"packetfowardmiddleware", // routerTypes.StoreKey,
 			"icahost",                // icaHostTypes.StoreKey,
 		)
@@ -512,9 +462,7 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "fetchhub" {
 		fetchhubKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
 			"wasm",     // wasm.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 		)
 
 		for key, value := range fetchhubKeys {
@@ -523,8 +471,6 @@ func pruneAppState(home string) error {
 	} else if app == "persistent" {
 		persistentKeys := types.NewKVStoreKeys(
 			"halving",  // halving.StoreKey,
-			"authz",    // sdkAuthzKeeper.StoreKey,
-			"feegrant", // feegrant.StoreKey,
 		)
 
 		for key, value := range persistentKeys {
@@ -532,8 +478,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "cryptoorgchain" {
 		cryptoorgchainKeys := types.NewKVStoreKeys(
-			"feegrant",  // feegrant.StoreKey,
-			"authz",     // authzkeeper.StoreKey,
 			"chainmain", // chainmaintypes.StoreKey,
 			"supply",    // supplytypes.StoreKey,
 			"nft",       // nfttypes.StoreKey,
@@ -554,7 +498,6 @@ func pruneAppState(home string) error {
 			"oracle",   // oracletypes.StoreKey,
 			"random",   // randomtypes.StoreKey,
 			"farm",     // farmtypes.StoreKey,
-			"feegrant", // feegrant.StoreKey,
 			"tibc",     // tibchost.StoreKey,
 			"NFT",      // tibcnfttypes.StoreKey,
 			"MT",       // tibcmttypes.StoreKey,
@@ -566,7 +509,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "axelar" {
 		axelarKeys := types.NewKVStoreKeys(
-			"feegrant",   // feegrant.StoreKey,
 			"vote",       // voteTypes.StoreKey,
 			"evm",        // evmTypes.StoreKey,
 			"snapshot",   // snapTypes.StoreKey,
@@ -583,8 +525,6 @@ func pruneAppState(home string) error {
 		}
 	} else if app == "umee" {
 		umeeKeys := types.NewKVStoreKeys(
-			"feegrant", // feegrant.StoreKey,
-			"authz",    // authzkeeper.StoreKey,
 			"gravity",  // gravitytypes.StoreKey,
 		)
 
