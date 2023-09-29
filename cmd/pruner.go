@@ -548,6 +548,9 @@ func pruneAppState(home string) error {
 			"reports",       // reports.StoreKey,
 			"reactions",     // reactions.StoreKey,
 			"fees",          // fees.StoreKey,
+			// mainnet since v6.0
+			"supply",
+			"tokenfactory",
 		)
 
 		for key, value := range desmosKeys {
