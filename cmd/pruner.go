@@ -519,6 +519,7 @@ func pruneAppState(home string) error {
 			"axelarnet",  // axelarnetTypes.StoreKey,
 			"reward",     // rewardTypes.StoreKey,
 			"permission", // permissionTypes.StoreKey,
+			"wasm",       // wasm.StoreKey,
 		)
 
 		for key, value := range axelarKeys {
