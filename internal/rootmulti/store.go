@@ -455,6 +455,8 @@ func (rs *Store) PruneStores() {
 						fmt.Println("error pruning store:", k.Name())
 						if !strings.HasPrefix(err.Error(), "cannot delete latest saved version") {
 							panic(err)
+						} else {
+							fmt.Println("skipping error:", err)
 						}
 					}
 				}

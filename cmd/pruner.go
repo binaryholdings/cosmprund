@@ -42,7 +42,7 @@ import (
 
 func pruneCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "prune [path_to_home]",
+		Use:   "prune [path_to_data]",
 		Short: "prune data from the application store and block store",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -581,6 +581,7 @@ func pruneAppState(home string) error {
 	appStore := rootmulti.NewStore(appDB)
 
 	for _, value := range keys {
+		fmt.Println("Mounting store", value.Name())
 		appStore.MountStoreWithDB(value, sdk.StoreTypeIAVL, nil)
 	}
 
