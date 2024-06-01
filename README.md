@@ -27,7 +27,7 @@ make build
 sudo systemctl stop cosmovisor
 
 # run cosmprund 
-./build/cosmprund prune ~/.gaiad/data --cosmos-sdk-version 46 [--cosmos-sdk=false] [--tendermint=false] [--app=cosmos] [--blocks=10] [--versions=10]
+./build/cosmprund prune ~/.gaiad/data [--cosmos-sdk-version 46] [--cosmos-sdk=false] [--tendermint=false] [--app=cosmos] [--blocks=10] [--versions=10]
 ```
 
 Flags: 
@@ -37,6 +37,7 @@ Flags:
 - `versions`: amount of app state versions to keep on the node (Default 10)
 - `app`: the application you want to prune, outside the sdk default modules. See `Supported Apps`
 - `cosmos-sdk`: If pruning a non cosmos-sdk chain, like Nomic, you only want to use tendermint pruning or if you want to only prune tendermint block & state as this is generally large on machines(Default true)
+- `cosmos-sdk-version`: Add stores released in newer versions of the cosmos-sdk. (Default 45)
 - `tendermint`: If the user wants to only prune application data they can disable pruning of tendermint data. (Default true)
 
 
