@@ -8,15 +8,16 @@ import (
 )
 
 var (
-	homePath   string
-	dataDir    string
-	backend    string
-	app        string
-	cosmosSdk  bool
-	tendermint bool
-	blocks     uint64
-	versions   uint64
-	appName    = "cosmprund"
+	homePath         string
+	dataDir          string
+	backend          string
+	app              string
+	cosmosSdk        bool
+	cosmosSdkVersion uint16
+	tendermint       bool
+	blocks           uint64
+	versions         uint64
+	appName          = "cosmprund"
 )
 
 // NewRootCmd returns the root command for relayer.
@@ -63,6 +64,12 @@ func NewRootCmd() *cobra.Command {
 	// --cosmos-sdk flag
 	rootCmd.PersistentFlags().BoolVar(&cosmosSdk, "cosmos-sdk", true, "set to false if using only with tendermint (default true)")
 	if err := viper.BindPFlag("cosmos-sdk", rootCmd.PersistentFlags().Lookup("cosmos-sdk")); err != nil {
+		panic(err)
+	}
+
+	// --cosmos-sdk-version flag
+	rootCmd.PersistentFlags().Uint16Var(&cosmosSdkVersion, "cosmos-sdk-version", 45, "change to higher version to support more modules, eg: 46, 47,...")
+	if err := viper.BindPFlag("cosmos-sdk-version", rootCmd.PersistentFlags().Lookup("cosmos-sdk-version")); err != nil {
 		panic(err)
 	}
 
