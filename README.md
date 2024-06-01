@@ -27,7 +27,7 @@ make build
 sudo systemctl stop cosmovisor
 
 # run cosmprund 
-./build/cosmprund prune ~/.gaiad/data --cosmos-sdk-version 46
+./build/cosmprund prune ~/.gaiad/data --cosmos-sdk-version 46 [--cosmos-sdk=false] [--tendermint=false] [--app=cosmos] [--blocks=10] [--versions=10]
 ```
 
 Flags: 
