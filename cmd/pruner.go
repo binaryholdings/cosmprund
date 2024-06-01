@@ -106,15 +106,19 @@ func pruneAppState(home string) error {
 	)
 
 	if cosmosSdkVersion >= 46 {
+		fmt.Println("Adding store", nfttypes.StoreKey, "of Cosmos v0.46+")
 		keys[nfttypes.StoreKey] = types.NewKVStoreKey(nfttypes.StoreKey)
 	}
 
 	if cosmosSdkVersion >= 47 {
+		fmt.Println("Adding store", crisistypes.StoreKey, "of Cosmos v0.47+")
 		keys[crisistypes.StoreKey] = types.NewKVStoreKey(crisistypes.StoreKey)
+		fmt.Println("Adding store", consensusparamtypes.StoreKey, "for cosmos v0.47+")
 		keys[consensusparamtypes.StoreKey] = types.NewKVStoreKey(consensusparamtypes.StoreKey)
 	}
 
 	if cosmosSdkVersion >= 50 {
+		fmt.Println("Adding store", circuittypes.StoreKey, "of Cosmos v0.50+")
 		keys[circuittypes.StoreKey] = types.NewKVStoreKey(circuittypes.StoreKey)
 	}
 
