@@ -11,7 +11,6 @@ var (
 	homePath   string
 	dataDir    string
 	backend    string
-	app        string
 	cosmosSdk  bool
 	tendermint bool
 	blocks     uint64
@@ -51,12 +50,6 @@ func NewRootCmd() *cobra.Command {
 	// --backend flag
 	rootCmd.PersistentFlags().StringVar(&backend, "backend", "goleveldb", "set the type of db being used(default=goleveldb)") //todo add list of dbs to comment
 	if err := viper.BindPFlag("backend", rootCmd.PersistentFlags().Lookup("backend")); err != nil {
-		panic(err)
-	}
-
-	// --app flag
-	rootCmd.PersistentFlags().StringVar(&app, "app", "", "set the app you are pruning (supported apps: osmosis)")
-	if err := viper.BindPFlag("app", rootCmd.PersistentFlags().Lookup("app")); err != nil {
 		panic(err)
 	}
 
