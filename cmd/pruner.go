@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"sync"
 
 	"github.com/neilotoole/errgroup"
 	"github.com/spf13/cobra"
@@ -659,6 +660,9 @@ func pruneTMData(home string) error {
 
 	pruneHeight := blockStore.Height() - int64(blocks)
 
+	// wait for all pruning to finish
+	var wg sync.WaitGroup
+	wg.Add(1)
 	errs, _ := errgroup.WithContext(context.Background())
 	errs.Go(func() error {
 		fmt.Println("pruning block store")
@@ -672,7 +676,7 @@ func pruneTMData(home string) error {
 		if err := blockStoreDB.ForceCompact(nil, nil); err != nil {
 			return err
 		}
-
+		wg.Done()
 		return nil
 	})
 
