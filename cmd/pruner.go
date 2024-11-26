@@ -691,6 +691,7 @@ func pruneTMData(home string) error {
 	if err := stateDB.ForceCompact(nil, nil); err != nil {
 		return err
 	}
+	wg.Wait()
 
 	stateDB.Close()
 	blockStoreDB.Close()
