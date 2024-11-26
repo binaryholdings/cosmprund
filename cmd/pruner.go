@@ -692,6 +692,8 @@ func pruneTMData(home string) error {
 		return err
 	}
 
+	stateDB.Close()
+	blockStoreDB.Close()
 	return nil
 }
 
