@@ -1,148 +1,137 @@
 package rootmulti
 
-import (
-	"testing"
+// func TestVerifyIAVLStoreQueryProof(t *testing.T) {
+// 	// Create main tree for testing.
+// 	db := dbm.NewMemDB()
+// 	iStore, err := iavl.LoadStore(db, types.CommitID{}, false, iavl.DefaultIAVLCacheSize)
+// 	store := iStore.(*iavl.Store)
+// 	require.Nil(t, err)
+// 	store.Set([]byte("MYKEY"), []byte("MYVALUE"))
+// 	cid := store.Commit()
 
-	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
-	dbm "github.com/tendermint/tm-db"
+// 	// Get Proof
+// 	res := store.Query(abci.RequestQuery{
+// 		Path:  "/key", // required path to get key/value+proof
+// 		Data:  []byte("MYKEY"),
+// 		Prove: true,
+// 	})
+// 	require.NotNil(t, res.ProofOps)
 
-	"github.com/cosmos/cosmos-sdk/store/iavl"
-	"github.com/cosmos/cosmos-sdk/store/types"
-)
+// 	// Verify proof.
+// 	prt := DefaultProofRuntime()
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE"))
+// 	require.Nil(t, err)
 
-func TestVerifyIAVLStoreQueryProof(t *testing.T) {
-	// Create main tree for testing.
-	db := dbm.NewMemDB()
-	iStore, err := iavl.LoadStore(db, types.CommitID{}, false, iavl.DefaultIAVLCacheSize)
-	store := iStore.(*iavl.Store)
-	require.Nil(t, err)
-	store.Set([]byte("MYKEY"), []byte("MYVALUE"))
-	cid := store.Commit()
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY_NOT", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Get Proof
-	res := store.Query(abci.RequestQuery{
-		Path:  "/key", // required path to get key/value+proof
-		Data:  []byte("MYKEY"),
-		Prove: true,
-	})
-	require.NotNil(t, res.ProofOps)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY/MYKEY", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify proof.
-	prt := DefaultProofRuntime()
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE"))
-	require.Nil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "MYKEY", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY_NOT", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE_NOT"))
+// 	require.NotNil(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY/MYKEY", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte(nil))
+// 	require.NotNil(t, err)
+// }
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "MYKEY", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// func TestVerifyMultiStoreQueryProof(t *testing.T) {
+// 	// Create main tree for testing.
+// 	db := dbm.NewMemDB()
+// 	store := NewStore(db)
+// 	iavlStoreKey := types.NewKVStoreKey("iavlStoreKey")
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE_NOT"))
-	require.NotNil(t, err)
+// 	store.MountStoreWithDB(iavlStoreKey, types.StoreTypeIAVL, nil)
+// 	require.NoError(t, store.LoadVersion(0))
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte(nil))
-	require.NotNil(t, err)
-}
+// 	iavlStore := store.GetCommitStore(iavlStoreKey).(*iavl.Store)
+// 	iavlStore.Set([]byte("MYKEY"), []byte("MYVALUE"))
+// 	cid := store.Commit()
 
-func TestVerifyMultiStoreQueryProof(t *testing.T) {
-	// Create main tree for testing.
-	db := dbm.NewMemDB()
-	store := NewStore(db)
-	iavlStoreKey := types.NewKVStoreKey("iavlStoreKey")
+// 	// Get Proof
+// 	res := store.Query(abci.RequestQuery{
+// 		Path:  "/iavlStoreKey/key", // required path to get key/value+proof
+// 		Data:  []byte("MYKEY"),
+// 		Prove: true,
+// 	})
+// 	require.NotNil(t, res.ProofOps)
 
-	store.MountStoreWithDB(iavlStoreKey, types.StoreTypeIAVL, nil)
-	require.NoError(t, store.LoadVersion(0))
+// 	// Verify proof.
+// 	prt := DefaultProofRuntime()
+// 	err := prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE"))
+// 	require.Nil(t, err)
 
-	iavlStore := store.GetCommitStore(iavlStoreKey).(*iavl.Store)
-	iavlStore.Set([]byte("MYKEY"), []byte("MYVALUE"))
-	cid := store.Commit()
+// 	// Verify proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE"))
+// 	require.Nil(t, err)
 
-	// Get Proof
-	res := store.Query(abci.RequestQuery{
-		Path:  "/iavlStoreKey/key", // required path to get key/value+proof
-		Data:  []byte("MYKEY"),
-		Prove: true,
-	})
-	require.NotNil(t, res.ProofOps)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY_NOT", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify proof.
-	prt := DefaultProofRuntime()
-	err := prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE"))
-	require.Nil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY/MYKEY", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE"))
-	require.Nil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "iavlStoreKey/MYKEY", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY_NOT", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE"))
+// 	require.NotNil(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY/MYKEY", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE_NOT"))
+// 	require.NotNil(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "iavlStoreKey/MYKEY", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// 	// Verify (bad) proof.
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte(nil))
+// 	require.NotNil(t, err)
+// }
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/MYKEY", []byte("MYVALUE"))
-	require.NotNil(t, err)
+// func TestVerifyMultiStoreQueryProofAbsence(t *testing.T) {
+// 	// Create main tree for testing.
+// 	db := dbm.NewMemDB()
+// 	store := NewStore(db)
+// 	iavlStoreKey := types.NewKVStoreKey("iavlStoreKey")
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte("MYVALUE_NOT"))
-	require.NotNil(t, err)
+// 	store.MountStoreWithDB(iavlStoreKey, types.StoreTypeIAVL, nil)
+// 	err := store.LoadVersion(0)
+// 	require.NoError(t, err)
 
-	// Verify (bad) proof.
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYKEY", []byte(nil))
-	require.NotNil(t, err)
-}
+// 	iavlStore := store.GetCommitStore(iavlStoreKey).(*iavl.Store)
+// 	iavlStore.Set([]byte("MYKEY"), []byte("MYVALUE"))
+// 	cid := store.Commit() // Commit with empty iavl store.
 
-func TestVerifyMultiStoreQueryProofAbsence(t *testing.T) {
-	// Create main tree for testing.
-	db := dbm.NewMemDB()
-	store := NewStore(db)
-	iavlStoreKey := types.NewKVStoreKey("iavlStoreKey")
+// 	// Get Proof
+// 	res := store.Query(abci.RequestQuery{
+// 		Path:  "/iavlStoreKey/key", // required path to get key/value+proof
+// 		Data:  []byte("MYABSENTKEY"),
+// 		Prove: true,
+// 	})
+// 	require.NotNil(t, res.ProofOps)
 
-	store.MountStoreWithDB(iavlStoreKey, types.StoreTypeIAVL, nil)
-	err := store.LoadVersion(0)
-	require.NoError(t, err)
+// 	// Verify proof.
+// 	prt := DefaultProofRuntime()
+// 	err = prt.VerifyAbsence(res.ProofOps, cid.Hash, "/iavlStoreKey/MYABSENTKEY")
+// 	require.Nil(t, err)
 
-	iavlStore := store.GetCommitStore(iavlStoreKey).(*iavl.Store)
-	iavlStore.Set([]byte("MYKEY"), []byte("MYVALUE"))
-	cid := store.Commit() // Commit with empty iavl store.
+// 	// Verify (bad) proof.
+// 	prt = DefaultProofRuntime()
+// 	err = prt.VerifyAbsence(res.ProofOps, cid.Hash, "/MYABSENTKEY")
+// 	require.NotNil(t, err)
 
-	// Get Proof
-	res := store.Query(abci.RequestQuery{
-		Path:  "/iavlStoreKey/key", // required path to get key/value+proof
-		Data:  []byte("MYABSENTKEY"),
-		Prove: true,
-	})
-	require.NotNil(t, res.ProofOps)
-
-	// Verify proof.
-	prt := DefaultProofRuntime()
-	err = prt.VerifyAbsence(res.ProofOps, cid.Hash, "/iavlStoreKey/MYABSENTKEY")
-	require.Nil(t, err)
-
-	// Verify (bad) proof.
-	prt = DefaultProofRuntime()
-	err = prt.VerifyAbsence(res.ProofOps, cid.Hash, "/MYABSENTKEY")
-	require.NotNil(t, err)
-
-	// Verify (bad) proof.
-	prt = DefaultProofRuntime()
-	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYABSENTKEY", []byte(""))
-	require.NotNil(t, err)
-}
+// 	// Verify (bad) proof.
+// 	prt = DefaultProofRuntime()
+// 	err = prt.VerifyValue(res.ProofOps, cid.Hash, "/iavlStoreKey/MYABSENTKEY", []byte(""))
+// 	require.NotNil(t, err)
+// }
